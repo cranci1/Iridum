@@ -126,6 +126,15 @@ struct MediaDetailView: View {
                                 .padding(.horizontal)
                         }
                         
+                        if !description.isEmpty {
+                            VStack(alignment: .leading) {
+                                Text("Description")
+                                    .font(.headline)
+                                Text(description)
+                            }
+                            .padding(.horizontal)
+                        }
+                        
                         if !mainActors.isEmpty {
                             VStack(alignment: .leading) {
                                 Text("Cast")
@@ -140,15 +149,6 @@ struct MediaDetailView: View {
                                 Text("Director")
                                     .font(.headline)
                                 Text(directors.joined(separator: ", "))
-                            }
-                            .padding(.horizontal)
-                        }
-                        
-                        if !description.isEmpty {
-                            VStack(alignment: .leading) {
-                                Text("Plot")
-                                    .font(.headline)
-                                Text(description)
                             }
                             .padding(.horizontal)
                         }
@@ -308,7 +308,7 @@ struct MediaDetailView: View {
                         if let url = URL(string: extractedUrl) {
                             setupAudioSession()
                             let player = AVPlayer(url: url)
-                            let playerViewController = AVPlayerViewController()
+                            let playerViewController = NormalPlayer()
                             playerViewController.player = player
                             
                             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -336,5 +336,53 @@ struct MediaDetailView: View {
         } catch {
             print("Failed to set up AVAudioSession: \(error)")
         }
+    }
+}
+
+class NormalPlayer: AVPlayerViewController {
+    private var originalRate: Float = 1.0
+    private var holdGesture: UILongPressGestureRecognizer?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupHoldGesture()
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if UserDefaults.standard.bool(forKey: "AlwaysLandscape") {
+            return .landscape
+        } else {
+            return .all
+        }
+    }
+    
+    private func setupHoldGesture() {
+        holdGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleHoldGesture(_:)))
+        holdGesture?.minimumPressDuration = 0.5
+        if let holdGesture = holdGesture {
+            view.addGestureRecognizer(holdGesture)
+        }
+    }
+    
+    @objc private func handleHoldGesture(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            beginHoldSpeed()
+        case .ended, .cancelled:
+            endHoldSpeed()
+        default:
+            break
+        }
+    }
+    
+    private func beginHoldSpeed() {
+        guard let player = player else { return }
+        originalRate = player.rate
+        let holdSpeed = UserDefaults.standard.float(forKey: "holdSpeedPlayer")
+        player.rate = holdSpeed
+    }
+    
+    private func endHoldSpeed() {
+        player?.rate = originalRate
     }
 }

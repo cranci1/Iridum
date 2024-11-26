@@ -215,7 +215,23 @@ struct IridumApp: App {
                     .tabItem {
                         Label("Search", systemImage: "magnifyingglass")
                     }
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gear")
+                    }
             }
+        }
+    }
+}
+
+struct SettingsView: View {
+    var body: some View {
+        NavigationView {
+            List {
+                Text("Library Item 1")
+                Text("Library Item 2")
+            }
+            .navigationTitle("Library")
         }
     }
 }
