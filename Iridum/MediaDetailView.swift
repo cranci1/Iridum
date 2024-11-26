@@ -63,21 +63,42 @@ struct MediaDetailView: View {
                             }
                             
                             HStack(spacing: 16) {
-                                if !quality.isEmpty {
-                                    Label(quality, systemImage: "film")
-                                        .foregroundColor(.secondary)
+                                HStack(spacing: 8) {
+                                    if !quality.isEmpty {
+                                        HStack(spacing: 2) {
+                                            Image(systemName: "film")
+                                                .foregroundColor(.secondary)
+                                            Text(quality)
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                    if runtime > 0 {
+                                        HStack(spacing: 2) {
+                                            Image(systemName: "clock")
+                                                .foregroundColor(.secondary)
+                                            Text("\(runtime)min")
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
                                 }
-                                if !score.isEmpty {
-                                    Label("\(score)/10", systemImage: "star.fill")
-                                        .foregroundColor(.yellow)
-                                }
-                                if runtime > 0 {
-                                    Label("\(runtime) min", systemImage: "clock")
-                                        .foregroundColor(.secondary)
-                                }
-                                if !age.isEmpty {
-                                    Label("\(age)+", systemImage: "person.2.fill")
-                                        .foregroundColor(.secondary)
+                                Spacer()
+                                HStack(spacing: 8) {
+                                    if !score.isEmpty {
+                                        HStack(spacing: 2) {
+                                            Image(systemName: "star.fill")
+                                                .foregroundColor(.secondary)
+                                            Text("\(score)/10")
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                    if !age.isEmpty {
+                                        HStack(spacing: 2) {
+                                            Image(systemName: "person.2.fill")
+                                                .foregroundColor(.secondary)
+                                            Text(age + "+")
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
                                 }
                             }
                             
@@ -185,7 +206,6 @@ struct MediaDetailView: View {
                                 self.runtime = titleData["runtime"] as? Int ?? 0
                                 self.releaseDate = titleData["release_date"] as? String ?? ""
                                 self.score = titleData["score"] as? String ?? ""
-                                self.age = titleData["age"] as? String ?? ""
                                 self.quality = titleData["quality"] as? String ?? ""
                                 
                                 if let genresData = titleData["genres"] as? [[String: Any]] {
@@ -198,6 +218,14 @@ struct MediaDetailView: View {
                                 
                                 if let directorsData = titleData["main_directors"] as? [[String: Any]] {
                                     self.directors = directorsData.compactMap { $0["name"] as? String }
+                                }
+                                
+                                if let ageValue = titleData["age"] as? Int {
+                                    self.age = "\(ageValue)"
+                                } else if let ageString = titleData["age"] as? String {
+                                    self.age = ageString
+                                } else {
+                                    self.age = ""
                                 }
                                 
                                 self.isLoading = false
@@ -282,8 +310,12 @@ struct MediaDetailView: View {
                             let player = AVPlayer(url: url)
                             let playerViewController = AVPlayerViewController()
                             playerViewController.player = player
-                            UIApplication.shared.windows.first?.rootViewController?.present(playerViewController, animated: true) {
-                                player.play()
+                            
+                            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                               let rootVC = windowScene.windows.first?.rootViewController {
+                                rootVC.present(playerViewController, animated: true) {
+                                    player.play()
+                                }
                             }
                         }
                     }
