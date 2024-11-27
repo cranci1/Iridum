@@ -34,7 +34,6 @@ struct SearchView: View {
     @State private var isLoading: Bool = false
     @State private var navigateToResults: Bool = false
     
-    // Load search history from UserDefaults
     @State private var searchHistory: [String] = UserDefaults.standard.stringArray(forKey: "SearchHistory") ?? []
 
     var body: some View {
@@ -169,7 +168,7 @@ struct ResultsView: View {
     var body: some View {
         List {
             ForEach(results) { result in
-                NavigationLink(destination: MediaDetailView(
+                NavigationLink(destination: MediaView(
                     title: result.name,
                     imageUrl: result.imageUrl,
                     href: result.href
@@ -205,7 +204,7 @@ struct IridumApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                ContentView()
+                HomeView()
                     .environmentObject(appSettings)
                     .tabItem {
                         Label("Home", systemImage: "house")

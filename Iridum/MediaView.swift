@@ -23,7 +23,7 @@ struct Episode: Identifiable {
     }
 }
 
-struct MediaDetailView: View {
+struct MediaView: View {
     let initialTitle: String
     let initialImageUrl: String
     let href: String
