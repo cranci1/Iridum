@@ -45,6 +45,8 @@ struct MediaView: View {
     @State private var embedUrl: String = ""
     @State private var playlistUrl: String = ""
     @State private var episodes: [Episode] = []
+    @State private var timeObserverToken: Any?
+    @State private var player: AVPlayer?
     
     init(title: String, imageUrl: String, href: String) {
         self.initialTitle = title
@@ -304,8 +306,8 @@ struct MediaView: View {
                                               let images = episodeData["images"] as? [[String: Any]],
                                               let firstImage = images.first,
                                               let filename = firstImage["filename"] as? String else {
-                                            return nil
-                                        }
+                                                  return nil
+                                              }
                                         return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
                                     }
                                 }
@@ -384,14 +386,24 @@ struct MediaView: View {
                         
                         if let url = URL(string: extractedUrl) {
                             setupAudioSession()
-                            let player = AVPlayer(url: url)
+                            let newPlayer = AVPlayer(url: url)
+                            self.player = newPlayer
                             let playerViewController = NormalPlayer()
-                            playerViewController.player = player
+                            playerViewController.player = newPlayer
                             
                             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                let rootVC = windowScene.windows.first?.rootViewController {
                                 rootVC.present(playerViewController, animated: true) {
-                                    player.play()
+                                    let lastPlayedTime = UserDefaults.standard.double(forKey: "lastPlayedTime_\(extractedUrl)")
+                                    if lastPlayedTime > 0 {
+                                        let seekTime = CMTime(seconds: lastPlayedTime, preferredTimescale: 1)
+                                        newPlayer.seek(to: seekTime) { _ in
+                                            newPlayer.play()
+                                        }
+                                    } else {
+                                        newPlayer.play()
+                                    }
+                                    self.addPeriodicTimeObserver(fullURL: extractedUrl)
                                 }
                             }
                         }
@@ -412,6 +424,24 @@ struct MediaView: View {
             try audioSession.overrideOutputAudioPort(.speaker)
         } catch {
             print("Failed to set up AVAudioSession: \(error)")
+        }
+    }
+    
+    func addPeriodicTimeObserver(fullURL: String) {
+        guard let player = self.player else { return }
+        
+        let interval = CMTime(seconds: 1.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
+            guard let currentItem = player.currentItem,
+                  currentItem.duration.seconds.isFinite else {
+                      return
+                  }
+            
+            let currentTime = time.seconds
+            let duration = currentItem.duration.seconds
+            
+            UserDefaults.standard.set(currentTime, forKey: "lastPlayedTime_\(fullURL)")
+            UserDefaults.standard.set(duration, forKey: "totalTime_\(fullURL)")
         }
     }
 }
