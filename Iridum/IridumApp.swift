@@ -255,13 +255,11 @@ struct SettingsView: View {
                     ))
                 }
                 
-                Section(header: Text("Display")) {
-                    Toggle("Always Landscape", isOn: $isAlwaysLandscape)
-                }
-                
-                Section(header: Text("Playback")) {
+                Section(header: Text("Player")) {
+                    Toggle("Force Landscape", isOn: $isAlwaysLandscape)
+                    
                     HStack {
-                        Text("Hold Speed")
+                        Text("Hold Speed:")
                         Spacer()
                         Stepper(
                             value: $holdSpeedPlayer,
