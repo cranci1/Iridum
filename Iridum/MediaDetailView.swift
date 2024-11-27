@@ -227,7 +227,6 @@ struct MediaDetailView: View {
                                 } else {
                                     self.age = ""
                                 }
-                                
                                 self.isLoading = false
                             }
                         }
@@ -239,7 +238,6 @@ struct MediaDetailView: View {
                     DispatchQueue.main.async {
                         self.playUrl = playUrl
                     }
-                    print(playUrl)
                 }
                 
             } catch {
