@@ -10,6 +10,19 @@ import Kingfisher
 import SwiftSoup
 import AVKit
 
+struct Episode: Identifiable {
+    let id: Int
+    let name: String
+    let plot: String
+    let imageFilename: String
+    let number: Int
+    let titleId: Int
+    
+    var playUrl: String {
+        return "https://streamingcommunity.computer/iframe/\(titleId)?episode_id=\(id)"
+    }
+}
+
 struct MediaDetailView: View {
     let initialTitle: String
     let initialImageUrl: String
@@ -31,6 +44,7 @@ struct MediaDetailView: View {
     @State private var playUrl: String = ""
     @State private var embedUrl: String = ""
     @State private var playlistUrl: String = ""
+    @State private var episodes: [Episode] = []
     
     init(title: String, imageUrl: String, href: String) {
         self.initialTitle = title
@@ -56,7 +70,7 @@ struct MediaDetailView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(title)
                                 .font(.largeTitle)
-                            if !originalTitle.isEmpty && originalTitle != title {
+                            if !originalTitle.isEmpty && originalTitle != title && UserDefaults.standard.bool(forKey: "showOriginalTitle") {
                                 Text(originalTitle)
                                     .font(.title2)
                                     .foregroundColor(.gray)
@@ -109,16 +123,37 @@ struct MediaDetailView: View {
                                             Text(genre)
                                                 .font(.caption)
                                                 .padding(.horizontal, 12)
-                                                .padding(.vertical, 6)
-                                                .background(Color.gray.opacity(0.2))
-                                                .cornerRadius(15)
+                                                .padding(.vertical, 8)
+                                                .background(Color.accentColor.opacity(0.1))
+                                                .cornerRadius(20)
+                                                .foregroundColor(.accentColor)
                                         }
                                     }
+                                    .padding(.vertical, 4)
                                 }
                             }
                         }
                         .padding(.horizontal)
                         
+                        if episodes.isEmpty {
+                            Button(action: {
+                                if !playUrl.isEmpty {
+                                    startMediaUrlChain(url: playUrl)
+                                } else if let url = URL(string: watchUrl) {
+                                    UIApplication.shared.open(url)
+                                }
+                            }) {
+                                Text("Watch Now")
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.accentColor)
+                                    .cornerRadius(10)
+                            }
+                            .padding()
+                            .disabled(watchUrl.isEmpty && playUrl.isEmpty)
+                        }
                         
                         if !releaseDate.isEmpty {
                             Text("Released: \(releaseDate)")
@@ -131,8 +166,52 @@ struct MediaDetailView: View {
                                 Text("Description")
                                     .font(.headline)
                                 Text(description)
+                                    .font(.caption)
                             }
                             .padding(.horizontal)
+                        }
+                        
+                        if !episodes.isEmpty {
+                            VStack(alignment: .leading) {
+                                Text("Episodes")
+                                    .font(.headline)
+                                    .padding(.horizontal)
+                                
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    LazyHStack(spacing: 8) {
+                                        ForEach(episodes) { episode in
+                                            Button(action: {
+                                                startMediaUrlChain(url: episode.playUrl)
+                                            }) {
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
+                                                        .resizable()
+                                                        .aspectRatio(16/9, contentMode: .fill)
+                                                        .frame(width: 240, height: 135)
+                                                        .cornerRadius(8)
+                                                    
+                                                    Text("Episode \(episode.number)")
+                                                        .font(.caption)
+                                                        .foregroundColor(.secondary)
+                                                    
+                                                    Text(episode.name)
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.white)
+                                                        .lineLimit(2)
+                                                    
+                                                    Text(episode.plot)
+                                                        .font(.caption2)
+                                                        .foregroundColor(.secondary)
+                                                        .lineLimit(5)
+                                                }
+                                                .frame(width: 240)
+                                                .padding(.bottom)
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                            }
                         }
                         
                         if !mainActors.isEmpty {
@@ -140,6 +219,7 @@ struct MediaDetailView: View {
                                 Text("Cast")
                                     .font(.headline)
                                 Text(mainActors.joined(separator: ", "))
+                                    .font(.caption)
                             }
                             .padding(.horizontal)
                         }
@@ -149,27 +229,10 @@ struct MediaDetailView: View {
                                 Text("Director")
                                     .font(.headline)
                                 Text(directors.joined(separator: ", "))
+                                    .font(.caption)
                             }
                             .padding(.horizontal)
                         }
-                        
-                        Button(action: {
-                            if !playUrl.isEmpty {
-                                startMediaUrlChain()
-                            } else if let url = URL(string: watchUrl) {
-                                UIApplication.shared.open(url)
-                            }
-                        }) {
-                            Text("Watch Now")
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.accentColor)
-                                .cornerRadius(10)
-                        }
-                        .padding()
-                        .disabled(watchUrl.isEmpty && playUrl.isEmpty)
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
@@ -227,7 +290,25 @@ struct MediaDetailView: View {
                                 } else {
                                     self.age = ""
                                 }
+                                
                                 self.isLoading = false
+                                
+                                if let episodesData = props["loadedSeason"] as? [String: Any],
+                                   let episodesList = episodesData["episodes"] as? [[String: Any]],
+                                   let titleId = episodesData["title_id"] as? Int {
+                                    self.episodes = episodesList.compactMap { episodeData in
+                                        guard let id = episodeData["id"] as? Int,
+                                              let name = episodeData["name"] as? String,
+                                              let plot = episodeData["plot"] as? String,
+                                              let number = episodeData["number"] as? Int,
+                                              let images = episodeData["images"] as? [[String: Any]],
+                                              let firstImage = images.first,
+                                              let filename = firstImage["filename"] as? String else {
+                                            return nil
+                                        }
+                                        return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
+                                    }
+                                }
                             }
                         }
                     }
@@ -249,8 +330,8 @@ struct MediaDetailView: View {
         }
     }
     
-    func startMediaUrlChain() {
-        guard let url = URL(string: playUrl) else {
+    func startMediaUrlChain(url: String) {
+        guard let url = URL(string: url) else {
             print("Invalid play URL")
             return
         }
@@ -266,7 +347,6 @@ struct MediaDetailView: View {
                     let document = try SwiftSoup.parse(html)
                     if let newEmbedUrl = try document.select("iframe").first()?.attr("src") {
                         fetchPlaylistUrl(from: newEmbedUrl)
-                        print("Embed URL: \(newEmbedUrl)")
                     }
                 } catch {
                     print("Error parsing play URL HTML: \(error)")
@@ -301,7 +381,6 @@ struct MediaDetailView: View {
                     
                     DispatchQueue.main.async {
                         self.playlistUrl = extractedUrl
-                        print("Found Playlist URL: \(extractedUrl)")
                         
                         if let url = URL(string: extractedUrl) {
                             setupAudioSession()

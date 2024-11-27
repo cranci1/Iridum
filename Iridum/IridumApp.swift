@@ -242,6 +242,7 @@ struct IridumApp: App {
 
 struct SettingsView: View {
     @AppStorage("alwaysLandscape") private var isAlwaysLandscape = false
+    @AppStorage("showOriginalTitle") private var showOriginalTitle = false
     @AppStorage("holdSpeedPlayer") private var holdSpeedPlayer: Double = 0.5
     @EnvironmentObject private var appSettings: AppSettings
     
@@ -253,6 +254,10 @@ struct SettingsView: View {
                         get: { appSettings.accentColor },
                         set: { appSettings.accentColor = $0 }
                     ))
+                }
+                
+                Section(header: Text("Informations")) {
+                    Toggle("Show Original Title", isOn: $showOriginalTitle)
                 }
                 
                 Section(header: Text("Player")) {
