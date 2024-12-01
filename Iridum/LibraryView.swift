@@ -10,7 +10,7 @@ import Kingfisher
 import SwiftUI
 
 struct LibraryItem: Identifiable, Codable {
-    let id: UUID
+    var id: String { href }
     let title: String
     let imageUrl: String
     let href: String
@@ -26,8 +26,13 @@ class LibraryViewModel: ObservableObject {
     }
     
     func addItem(_ item: LibraryItem) {
-        guard !items.contains(where: { $0.id == item.id }) else { return }
+        guard !items.contains(where: { $0.href == item.href }) else { return }
         items.append(item)
+        saveItems()
+    }
+    
+    func removeItem(withHref href: String) {
+        items.removeAll { $0.href == href }
         saveItems()
     }
     
@@ -38,12 +43,12 @@ class LibraryViewModel: ObservableObject {
         }
     }
     
-    func removeItem(_ item: LibraryItem) {
-        items.removeAll { $0.id == item.id }
+    func moveItems(from source: IndexSet, to destination: Int) {
+        items.move(fromOffsets: source, toOffset: destination)
         saveItems()
     }
     
-    private func saveItems() {
+    func saveItems() {
         if let encoded = try? JSONEncoder().encode(items) {
             UserDefaults.standard.set(encoded, forKey: "bookmarkedMedia")
         }
@@ -55,42 +60,31 @@ class LibraryViewModel: ObservableObject {
             items = decodedItems
         }
     }
-    
-    var favoriteItems: [LibraryItem] {
-        items.filter { $0.isFavorite }
-    }
-    
-    var finishedItems: [LibraryItem] {
-        items.filter { $0.isFinished }
-    }
-    
-    var otherItems: [LibraryItem] {
-        items.filter { !$0.isFavorite && !$0.isFinished }
-    }
 }
 
 struct LibraryView: View {
     @EnvironmentObject private var libraryViewModel: LibraryViewModel
     
+    let columns = [
+        GridItem(.adaptive(minimum: 150), spacing: 16)
+    ]
+    
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("Watching")) {
-                    ForEach(libraryViewModel.favoriteItems) { item in
-                        LibraryItemView(item: item)
+            ScrollView {
+                if libraryViewModel.items.isEmpty {
+                    VStack {
+                        Text("Your library is empty.")
+                            .foregroundColor(.secondary)
+                            .padding()
                     }
-                }
-                
-                Section(header: Text("Planning")) {
-                    ForEach(libraryViewModel.otherItems) { item in
-                        LibraryItemView(item: item)
+                } else {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(libraryViewModel.items) { item in
+                            LibraryItemView(item: item)
+                        }
                     }
-                }
-                
-                Section(header: Text("Finished")) {
-                    ForEach(libraryViewModel.finishedItems) { item in
-                        LibraryItemView(item: item)
-                    }
+                    .padding()
                 }
             }
             .navigationTitle("Library")
@@ -103,55 +97,41 @@ struct LibraryItemView: View {
     var item: LibraryItem
     
     var body: some View {
-        NavigationLink(destination: MediaView(
-            title: item.title,
-            imageUrl: item.imageUrl,
-            href: item.href
-        )) {
-            HStack {
+        ZStack(alignment: .topTrailing) {
+            NavigationLink(destination: MediaView(
+                title: item.title,
+                imageUrl: item.imageUrl,
+                href: item.href
+            )) {
                 KFImage(URL(string: item.imageUrl))
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 90)
-                    .clipped()
-                    .cornerRadius(5)
-                
-                VStack(alignment: .leading) {
-                    Text(item.title)
-                        .font(.headline)
-                    Text(item.href)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
+                    .aspectRatio(2/3, contentMode: .fill)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
             }
-            .padding(.vertical, 5)
-        }
-        .swipeActions(edge: .leading) {
+            .buttonStyle(PlainButtonStyle())
+            
             Button(action: {
                 var updatedItem = item
                 updatedItem.isFavorite.toggle()
                 libraryViewModel.updateItem(updatedItem)
             }) {
-                Label("Favorite", systemImage: "star")
+                Image(systemName: item.isFavorite ? "heart.fill" : "heart")
+                    .font(.title)
+                    .foregroundColor(item.isFavorite ? .red : .white)
+                    .padding(8)
             }
-            .tint(.yellow)
-            
-            Button(action: {
-                var updatedItem = item
-                updatedItem.isFinished.toggle()
-                libraryViewModel.updateItem(updatedItem)
-            }) {
-                Label("Finished", systemImage: "checkmark")
-            }
-            .tint(.green)
         }
-        .swipeActions(edge: .trailing) {
-            Button(role: .destructive) {
-                libraryViewModel.removeItem(item)
-            } label: {
-                Label("Delete", systemImage: "trash")
+        .frame(width: 150, height: 225)
+        .overlay(
+            VStack {
+                Spacer()
+                Text(item.title)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding([.leading, .bottom], 8)
+                    .lineLimit(2)
             }
-            .tint(.red)
-        }
+        )
     }
 }

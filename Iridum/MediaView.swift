@@ -47,6 +47,7 @@ struct MediaView: View {
     @State private var episodes: [Episode] = []
     @State private var timeObserverToken: Any?
     @State private var player: AVPlayer?
+    @State private var isBookmarked: Bool = false
     
     @EnvironmentObject private var libraryViewModel: LibraryViewModel
     
@@ -65,7 +66,6 @@ struct MediaView: View {
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
-                        // Header Image
                         KFImage(URL(string: initialImageUrl))
                             .resizable()
                             .scaledToFit()
@@ -218,9 +218,9 @@ struct MediaView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
-                            bookmarkMedia()
+                            toggleBookmark()
                         }) {
-                            Image(systemName: "bookmark")
+                            Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
                                 .foregroundColor(.primary)
                         }
                     }
@@ -229,7 +229,12 @@ struct MediaView: View {
         }
         .onAppear {
             fetchMediaDetails()
+            checkIfBookmarked()
         }
+    }
+    
+    func checkIfBookmarked() {
+        isBookmarked = libraryViewModel.items.contains(where: { $0.href == href })
     }
     
     func fetchMediaDetails() {
@@ -320,16 +325,21 @@ struct MediaView: View {
         }
     }
     
-    func bookmarkMedia() {
-        let newBookmark = LibraryItem(
-            id: UUID(),
-            title: title,
-            imageUrl: initialImageUrl,
-            href: href,
-            isFavorite: false,
-            isFinished: false
-        )
-        libraryViewModel.addItem(newBookmark)
+    func toggleBookmark() {
+        if isBookmarked {
+            libraryViewModel.removeItem(withHref: href)
+            isBookmarked = false
+        } else {
+            let newBookmark = LibraryItem(
+                title: title,
+                imageUrl: initialImageUrl,
+                href: href,
+                isFavorite: false,
+                isFinished: false
+            )
+            libraryViewModel.addItem(newBookmark)
+            isBookmarked = true
+        }
     }
     
     func startMediaUrlChain(url: String) {
