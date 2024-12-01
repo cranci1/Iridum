@@ -69,6 +69,15 @@ struct LibraryView: View {
         GridItem(.adaptive(minimum: 150), spacing: 16)
     ]
     
+    var sortedItems: [LibraryItem] {
+        libraryViewModel.items.sorted { item1, item2 in
+            if item1.isFavorite != item2.isFavorite {
+                return item1.isFavorite
+            }
+            return item1.title < item2.title
+        }
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -80,7 +89,7 @@ struct LibraryView: View {
                     }
                 } else {
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(libraryViewModel.items) { item in
+                        ForEach(sortedItems) { item in
                             LibraryItemView(item: item)
                         }
                     }
