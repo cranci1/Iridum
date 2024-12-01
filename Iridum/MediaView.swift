@@ -48,6 +48,8 @@ struct MediaView: View {
     @State private var timeObserverToken: Any?
     @State private var player: AVPlayer?
     
+    @EnvironmentObject private var libraryViewModel: LibraryViewModel
+    
     init(title: String, imageUrl: String, href: String) {
         self.initialTitle = title
         self.initialImageUrl = imageUrl
@@ -138,23 +140,38 @@ struct MediaView: View {
                         .padding(.horizontal)
                         
                         if episodes.isEmpty {
-                            Button(action: {
-                                if !playUrl.isEmpty {
-                                    startMediaUrlChain(url: playUrl)
-                                } else if let url = URL(string: watchUrl) {
-                                    UIApplication.shared.open(url)
+                            HStack {
+                                Button(action: {
+                                    if !playUrl.isEmpty {
+                                        startMediaUrlChain(url: playUrl)
+                                    } else if let url = URL(string: watchUrl) {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }) {
+                                    Text("Watch Now")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.accentColor)
+                                        .cornerRadius(10)
                                 }
-                            }) {
-                                Text("Watch Now")
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.accentColor)
-                                    .cornerRadius(10)
+                                .padding()
+                                .disabled(watchUrl.isEmpty && playUrl.isEmpty)
+                                
+                                Button(action: {
+                                    bookmarkMedia()
+                                }) {
+                                    Text("Bookmark")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .cornerRadius(10)
+                                }
+                                .padding()
                             }
-                            .padding()
-                            .disabled(watchUrl.isEmpty && playUrl.isEmpty)
                         }
                         
                         if !releaseDate.isEmpty {
@@ -332,6 +349,18 @@ struct MediaView: View {
                 }
             }
         }
+    }
+    
+    func bookmarkMedia() {
+        let newBookmark = LibraryItem(
+            id: UUID(),
+            title: title,
+            imageUrl: initialImageUrl,
+            href: href,
+            isFavorite: false,
+            isFinished: false
+        )
+        libraryViewModel.addItem(newBookmark)
     }
     
     func startMediaUrlChain(url: String) {

@@ -16,6 +16,7 @@
 		130217E92CF4E9060035C12F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130217E82CF4E9060035C12F /* MediaView.swift */; };
 		134293812CF75AA7003775BB /* NormalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293802CF75AA7003775BB /* NormalPlayer.swift */; };
 		134293832CF75AF6003775BB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293822CF75AF6003775BB /* SettingsView.swift */; };
+		138C7D422CFC76C000F2F825 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C7D412CFC76C000F2F825 /* LibraryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		1302180A2CF617280035C12F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		134293802CF75AA7003775BB /* NormalPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalPlayer.swift; sourceTree = "<group>"; };
 		134293822CF75AF6003775BB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		138C7D412CFC76C000F2F825 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				130217D02CF4E3AA0035C12F /* HomeView.swift */,
 				130217D22CF4E3AC0035C12F /* Assets.xcassets */,
 				130217D42CF4E3AC0035C12F /* Preview Content */,
+				138C7D412CFC76C000F2F825 /* LibraryView.swift */,
 			);
 			path = Iridum;
 			sourceTree = "<group>";
@@ -164,6 +167,7 @@
 				130217E92CF4E9060035C12F /* MediaView.swift in Sources */,
 				130217D12CF4E3AA0035C12F /* HomeView.swift in Sources */,
 				130217CF2CF4E3AA0035C12F /* IridumApp.swift in Sources */,
+				138C7D422CFC76C000F2F825 /* LibraryView.swift in Sources */,
 				134293812CF75AA7003775BB /* NormalPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

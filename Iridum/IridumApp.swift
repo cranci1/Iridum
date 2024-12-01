@@ -9,18 +9,6 @@ import SwiftUI
 import SwiftSoup
 import Kingfisher
 
-struct LibraryView: View {
-    var body: some View {
-        NavigationView {
-            List {
-                Text("Library Item 1")
-                Text("Library Item 2")
-            }
-            .navigationTitle("Library")
-        }
-    }
-}
-
 struct SearchResult: Identifiable {
     let id = UUID()
     let name: String
@@ -194,47 +182,5 @@ struct ResultsView: View {
             }
         }
         .navigationTitle("Results")
-    }
-}
-
-@main
-struct IridumApp: App {
-    @StateObject private var appSettings = AppSettings()
-    
-    var body: some Scene {
-        WindowGroup {
-            TabView {
-                HomeView()
-                    .environmentObject(appSettings)
-                    .tabItem {
-                        Label("Home", systemImage: "house")
-                    }
-                    .accentColor(appSettings.accentColor)
-                
-                LibraryView()
-                    .environmentObject(appSettings)
-                    .tabItem {
-                        Label("Library", systemImage: "book")
-                    }
-                    .accentColor(appSettings.accentColor)
-                
-                SearchView()
-                    .environmentObject(appSettings)
-                    .tabItem {
-                        Label("Search", systemImage: "magnifyingglass")
-                    }
-                    .accentColor(appSettings.accentColor)
-                
-                SettingsView()
-                    .environmentObject(appSettings)
-                    .tabItem {
-                        Label("Settings", systemImage: "gear")
-                    }
-                    .accentColor(appSettings.accentColor)
-            }
-            .environmentObject(appSettings)
-            .tint(appSettings.accentColor)
-            .accentColor(appSettings.accentColor)
-        }
     }
 }
