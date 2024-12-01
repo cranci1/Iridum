@@ -61,9 +61,11 @@ struct MediaView: View {
         Group {
             if isLoading {
                 ProgressView("Loading details...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
+                        // Header Image
                         KFImage(URL(string: initialImageUrl))
                             .resizable()
                             .scaledToFit()
@@ -73,56 +75,40 @@ struct MediaView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text(title)
-                                .font(.largeTitle)
+                                .font(.title)
+                                .bold()
+                                .padding(.horizontal)
+                            
                             if !originalTitle.isEmpty && originalTitle != title && UserDefaults.standard.bool(forKey: "showOriginalTitle") {
                                 Text(originalTitle)
-                                    .font(.title2)
+                                    .font(.headline)
                                     .foregroundColor(.gray)
+                                    .padding(.horizontal)
                             }
                             
                             HStack(spacing: 16) {
-                                HStack(spacing: 8) {
-                                    if !quality.isEmpty {
-                                        HStack(spacing: 2) {
-                                            Image(systemName: "film")
-                                                .foregroundColor(.secondary)
-                                            Text(quality)
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
-                                    if runtime > 0 {
-                                        HStack(spacing: 2) {
-                                            Image(systemName: "clock")
-                                                .foregroundColor(.secondary)
-                                            Text("\(runtime)min")
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
+                                if !quality.isEmpty {
+                                    Label(quality, systemImage: "film")
+                                        .foregroundColor(.secondary)
                                 }
-                                Spacer()
-                                HStack(spacing: 8) {
-                                    if !score.isEmpty {
-                                        HStack(spacing: 2) {
-                                            Image(systemName: "star.fill")
-                                                .foregroundColor(.secondary)
-                                            Text("\(score)/10")
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
-                                    if !age.isEmpty {
-                                        HStack(spacing: 2) {
-                                            Image(systemName: "person.2.fill")
-                                                .foregroundColor(.secondary)
-                                            Text(age + "+")
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
+                                if runtime > 0 {
+                                    Label("\(runtime) min", systemImage: "clock")
+                                        .foregroundColor(.secondary)
+                                }
+                                if !score.isEmpty {
+                                    Label("\(score)/10", systemImage: "star.fill")
+                                        .foregroundColor(.secondary)
+                                }
+                                if !age.isEmpty {
+                                    Label("\(age)+", systemImage: "person.crop.circle")
+                                        .foregroundColor(.secondary)
                                 }
                             }
+                            .padding(.horizontal)
                             
                             if !genres.isEmpty {
                                 ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack {
+                                    HStack(spacing: 8) {
                                         ForEach(genres, id: \.self) { genre in
                                             Text(genre)
                                                 .font(.caption)
@@ -133,129 +119,112 @@ struct MediaView: View {
                                                 .foregroundColor(.accentColor)
                                         }
                                     }
-                                    .padding(.vertical, 4)
+                                    .padding(.horizontal)
                                 }
                             }
+                        }
+                        
+                        Button(action: {
+                            if !playUrl.isEmpty {
+                                startMediaUrlChain(url: playUrl)
+                            } else if let url = URL(string: watchUrl) {
+                                UIApplication.shared.open(url)
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "play.fill")
+                                Text("Watch Now")
+                                    .fontWeight(.bold)
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.accentColor)
+                            .cornerRadius(10)
                         }
                         .padding(.horizontal)
-                        
-                        if episodes.isEmpty {
-                            HStack {
-                                Button(action: {
-                                    if !playUrl.isEmpty {
-                                        startMediaUrlChain(url: playUrl)
-                                    } else if let url = URL(string: watchUrl) {
-                                        UIApplication.shared.open(url)
-                                    }
-                                }) {
-                                    Text("Watch Now")
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.accentColor)
-                                        .cornerRadius(10)
-                                }
-                                .padding()
-                                .disabled(watchUrl.isEmpty && playUrl.isEmpty)
-                                
-                                Button(action: {
-                                    bookmarkMedia()
-                                }) {
-                                    Text("Bookmark")
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .cornerRadius(10)
-                                }
-                                .padding()
-                            }
-                        }
-                        
-                        if !releaseDate.isEmpty {
-                            Text("Released: \(releaseDate)")
-                                .font(.subheadline)
-                                .padding(.horizontal)
-                        }
+                        .disabled(watchUrl.isEmpty && playUrl.isEmpty)
                         
                         if !description.isEmpty {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text("Description")
                                     .font(.headline)
                                 Text(description)
-                                    .font(.caption)
+                                    .font(.body)
+                                    .foregroundColor(.secondary)
                             }
                             .padding(.horizontal)
                         }
                         
                         if !episodes.isEmpty {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text("Episodes")
                                     .font(.headline)
                                     .padding(.horizontal)
                                 
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    LazyHStack(spacing: 8) {
-                                        ForEach(episodes) { episode in
-                                            Button(action: {
-                                                startMediaUrlChain(url: episode.playUrl)
-                                            }) {
+                                LazyVStack(spacing: 16) {
+                                    ForEach(episodes) { episode in
+                                        Button(action: {
+                                            startMediaUrlChain(url: episode.playUrl)
+                                        }) {
+                                            HStack(spacing: 16) {
+                                                KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
+                                                    .resizable()
+                                                    .aspectRatio(16/9, contentMode: .fill)
+                                                    .frame(width: 120, height: 67.5)
+                                                    .cornerRadius(8)
+                                                    .clipped()
+                                                
                                                 VStack(alignment: .leading, spacing: 4) {
-                                                    KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
-                                                        .resizable()
-                                                        .aspectRatio(16/9, contentMode: .fill)
-                                                        .frame(width: 240, height: 135)
-                                                        .cornerRadius(8)
-                                                    
-                                                    Text("Episode \(episode.number)")
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                    
-                                                    Text(episode.name)
-                                                        .font(.subheadline)
-                                                        .foregroundColor(.white)
-                                                        .lineLimit(2)
-                                                    
+                                                    Text("Episode \(episode.number): \(episode.name)")
+                                                        .font(.headline)
                                                     Text(episode.plot)
-                                                        .font(.caption2)
+                                                        .font(.subheadline)
                                                         .foregroundColor(.secondary)
-                                                        .lineLimit(5)
-                                                        .frame(alignment: .leading)
+                                                        .lineLimit(2)
                                                 }
-                                                .frame(width: 240)
-                                                .padding(.bottom)
                                             }
+                                            .padding(.horizontal)
                                         }
                                     }
-                                    .padding(.horizontal)
                                 }
                             }
                         }
                         
                         if !mainActors.isEmpty {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text("Cast")
                                     .font(.headline)
                                 Text(mainActors.joined(separator: ", "))
-                                    .font(.caption)
+                                    .font(.body)
+                                    .foregroundColor(.secondary)
                             }
                             .padding(.horizontal)
                         }
                         
                         if !directors.isEmpty {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text("Director")
                                     .font(.headline)
                                 Text(directors.joined(separator: ", "))
-                                    .font(.caption)
+                                    .font(.body)
+                                    .foregroundColor(.secondary)
                             }
                             .padding(.horizontal)
                         }
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            bookmarkMedia()
+                        }) {
+                            Image(systemName: "bookmark")
+                                .foregroundColor(.primary)
+                        }
+                    }
+                }
             }
         }
         .onAppear {
