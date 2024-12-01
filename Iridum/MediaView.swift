@@ -125,7 +125,11 @@ struct MediaView: View {
                         }
                         
                         Button(action: {
-                            if !playUrl.isEmpty {
+                            if !episodes.isEmpty {
+                                if let firstEpisodeUrl = getFirstEpisodePlayUrl() {
+                                    startMediaUrlChain(url: firstEpisodeUrl)
+                                }
+                            } else if !playUrl.isEmpty {
                                 startMediaUrlChain(url: playUrl)
                             } else if let url = URL(string: watchUrl) {
                                 UIApplication.shared.open(url)
@@ -133,7 +137,7 @@ struct MediaView: View {
                         }) {
                             HStack {
                                 Image(systemName: "play.fill")
-                                Text("Watch Now")
+                                Text(!episodes.isEmpty ? "Watch Series" : "Watch Now")
                                     .fontWeight(.bold)
                             }
                             .foregroundColor(.white)
@@ -143,7 +147,7 @@ struct MediaView: View {
                             .cornerRadius(10)
                         }
                         .padding(.horizontal)
-                        .disabled(watchUrl.isEmpty && playUrl.isEmpty)
+                        .disabled(playUrl.isEmpty && watchUrl.isEmpty && episodes.isEmpty)
                         
                         if !description.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
@@ -162,31 +166,37 @@ struct MediaView: View {
                                     .font(.headline)
                                     .padding(.horizontal)
                                 
-                                LazyVStack(spacing: 16) {
-                                    ForEach(episodes) { episode in
-                                        Button(action: {
-                                            startMediaUrlChain(url: episode.playUrl)
-                                        }) {
-                                            HStack(spacing: 16) {
-                                                KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
-                                                    .resizable()
-                                                    .aspectRatio(16/9, contentMode: .fill)
-                                                    .frame(width: 120, height: 67.5)
-                                                    .cornerRadius(8)
-                                                    .clipped()
-                                                
-                                                VStack(alignment: .leading, spacing: 4) {
-                                                    Text("Episode \(episode.number): \(episode.name)")
-                                                        .font(.headline)
-                                                    Text(episode.plot)
-                                                        .font(.subheadline)
-                                                        .foregroundColor(.secondary)
-                                                        .lineLimit(2)
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: 16) {
+                                        ForEach(episodes) { episode in
+                                            Button(action: {
+                                                startMediaUrlChain(url: episode.playUrl)
+                                            }) {
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
+                                                        .resizable()
+                                                        .aspectRatio(16/9, contentMode: .fill)
+                                                        .frame(width: 240, height: 135)
+                                                        .cornerRadius(8)
+                                                    
+                                                    VStack(alignment: .leading, spacing: 4) {
+                                                        Text("Episode \(episode.number)")
+                                                            .font(.caption)
+                                                            .foregroundColor(.secondary)
+                                                        Text(episode.name)
+                                                            .font(.subheadline)
+                                                            .foregroundColor(.primary)
+                                                        Text(episode.plot)
+                                                            .font(.caption2)
+                                                            .foregroundColor(.secondary)
+                                                            .lineLimit(3)
+                                                    }
+                                                    .frame(width: 240, alignment: .leading)
                                                 }
                                             }
-                                            .padding(.horizontal)
                                         }
                                     }
+                                    .padding(.horizontal)
                                 }
                             }
                         }
@@ -365,6 +375,10 @@ struct MediaView: View {
                 }
             }
         }.resume()
+    }
+    
+    func getFirstEpisodePlayUrl() -> String? {
+        return episodes.first?.playUrl
     }
     
     func fetchPlaylistUrl(from embedUrl: String) {

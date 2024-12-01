@@ -70,9 +70,9 @@
 				130217CE2CF4E3AA0035C12F /* IridumApp.swift */,
 				134293822CF75AF6003775BB /* SettingsView.swift */,
 				130217D02CF4E3AA0035C12F /* HomeView.swift */,
+				138C7D412CFC76C000F2F825 /* LibraryView.swift */,
 				130217D22CF4E3AC0035C12F /* Assets.xcassets */,
 				130217D42CF4E3AC0035C12F /* Preview Content */,
-				138C7D412CFC76C000F2F825 /* LibraryView.swift */,
 			);
 			path = Iridum;
 			sourceTree = "<group>";
