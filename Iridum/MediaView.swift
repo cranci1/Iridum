@@ -185,7 +185,7 @@ struct MediaView: View {
                                             Button(action: {
                                                 startMediaUrlChain(url: episode.playUrl)
                                             }) {
-                                                VStack(alignment: .leading, spacing: 8) {
+                                                VStack(alignment: .leading, spacing: 4) {
                                                     KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
                                                         .resizable()
                                                         .aspectRatio(16/9, contentMode: .fill)
@@ -205,6 +205,7 @@ struct MediaView: View {
                                                         .font(.caption2)
                                                         .foregroundColor(.secondary)
                                                         .lineLimit(5)
+                                                        .frame(alignment: .leading)
                                                 }
                                                 .frame(width: 240)
                                                 .padding(.bottom)
@@ -308,6 +309,7 @@ struct MediaView: View {
                                               let filename = firstImage["filename"] as? String else {
                                                   return nil
                                               }
+                                        
                                         return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
                                     }
                                 }
@@ -385,7 +387,6 @@ struct MediaView: View {
                         self.playlistUrl = extractedUrl
                         
                         if let url = URL(string: extractedUrl) {
-                            setupAudioSession()
                             let newPlayer = AVPlayer(url: url)
                             self.player = newPlayer
                             let playerViewController = NormalPlayer()
@@ -413,18 +414,6 @@ struct MediaView: View {
                 }
             }
         }.resume()
-    }
-    
-    func setupAudioSession() {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .moviePlayback, options: .mixWithOthers)
-            try audioSession.setActive(true)
-            
-            try audioSession.overrideOutputAudioPort(.speaker)
-        } catch {
-            print("Failed to set up AVAudioSession: \(error)")
-        }
     }
     
     func addPeriodicTimeObserver(fullURL: String) {

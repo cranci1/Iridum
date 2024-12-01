@@ -14,6 +14,7 @@ class NormalPlayer: AVPlayerViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupHoldGesture()
+        setupAudioSession()
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -53,5 +54,16 @@ class NormalPlayer: AVPlayerViewController {
     private func endHoldSpeed() {
         player?.rate = originalRate
     }
+    
+    func setupAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .moviePlayback, options: .mixWithOthers)
+            try audioSession.setActive(true)
+            
+            try audioSession.overrideOutputAudioPort(.speaker)
+        } catch {
+            print("Failed to set up AVAudioSession: \(error)")
+        }
+    }
 }
-
