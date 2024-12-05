@@ -10,6 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @AppStorage("alwaysLandscape") private var isAlwaysLandscape = false
     @AppStorage("showOriginalTitle") private var showOriginalTitle = false
+    @AppStorage("showDirector") private var showDirector = false
+    @AppStorage("showCast") private var showCast = false
     @AppStorage("holdSpeedPlayer") private var holdSpeedPlayer: Double = 0.5
     @EnvironmentObject private var appSettings: AppSettings
     
@@ -25,6 +27,8 @@ struct SettingsView: View {
                 
                 Section(header: Text("Informations")) {
                     Toggle("Show Original Title", isOn: $showOriginalTitle)
+                    Toggle("Show Cast", isOn: $showCast)
+                    Toggle("Show Director", isOn: $showDirector)
                 }
                 
                 Section(header: Text("Player")) {

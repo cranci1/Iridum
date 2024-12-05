@@ -228,7 +228,7 @@ struct MediaView: View {
                             }
                         }
                         
-                        if !mainActors.isEmpty {
+                        if !mainActors.isEmpty && UserDefaults.standard.bool(forKey: "showCast")  {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Cast")
                                     .font(.headline)
@@ -239,7 +239,7 @@ struct MediaView: View {
                             .padding(.horizontal)
                         }
                         
-                        if !directors.isEmpty {
+                        if !directors.isEmpty && UserDefaults.standard.bool(forKey: "showDirector") {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Director")
                                     .font(.headline)
