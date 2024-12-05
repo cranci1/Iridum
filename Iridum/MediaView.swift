@@ -19,7 +19,7 @@ struct Episode: Identifiable {
     let titleId: Int
     
     var playUrl: String {
-        return "https://streamingcommunity.computer/iframe/\(titleId)?episode_id=\(id)"
+        return "https://streamingcommunity.asia/iframe/\(titleId)?episode_id=\(id)"
     }
 }
 
@@ -35,6 +35,7 @@ struct MediaView: View {
     @State private var watchUrl: String = ""
     @State private var isLoading: Bool = true
     @State private var runtime: Int = 0
+    @State private var seasons: Int = 0
     @State private var releaseDate: String = ""
     @State private var score: String = ""
     @State private var age: String = ""
@@ -48,6 +49,8 @@ struct MediaView: View {
     @State private var timeObserverToken: Any?
     @State private var player: AVPlayer?
     @State private var isBookmarked: Bool = false
+    @State private var selectedSeason: Int = 1
+    @State private var showSeasonMenu: Bool = false
     
     @EnvironmentObject private var libraryViewModel: LibraryViewModel
     
@@ -162,9 +165,33 @@ struct MediaView: View {
                         
                         if !episodes.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("Episodes")
-                                    .font(.headline)
-                                    .padding(.horizontal)
+                                if seasons > 1 {
+                                    HStack {
+                                        Text("Episodes")
+                                            .font(.headline)
+                                            .padding(.horizontal)
+                                        
+                                        Spacer()
+                                        
+                                        Menu {
+                                            ForEach(1...seasons, id: \.self) { season in
+                                                Button(action: {
+                                                    selectedSeason = season
+                                                    fetchMediaDetails()
+                                                }) {
+                                                    Text("Season \(season)")
+                                                }
+                                            }
+                                        } label: {
+                                            Label("Season \(selectedSeason)", systemImage: "chevron.down")
+                                                .padding(.horizontal)
+                                        }
+                                    }
+                                } else {
+                                    Text("Episodes")
+                                        .font(.headline)
+                                        .padding(.horizontal)
+                                }
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 16) {
@@ -173,7 +200,7 @@ struct MediaView: View {
                                                 startMediaUrlChain(url: episode.playUrl)
                                             }) {
                                                 VStack(alignment: .leading, spacing: 8) {
-                                                    KFImage(URL(string: "https://cdn.streamingcommunity.computer/images/\(episode.imageFilename)"))
+                                                    KFImage(URL(string: "https://cdn.streamingcommunity.asia/images/\(episode.imageFilename)"))
                                                         .resizable()
                                                         .aspectRatio(16/9, contentMode: .fill)
                                                         .frame(width: 240, height: 135)
@@ -248,7 +275,7 @@ struct MediaView: View {
     }
     
     func fetchMediaDetails() {
-        let searchUrl = href
+        let searchUrl = "\(href)/stagione-\(selectedSeason)"
         
         guard let url = URL(string: searchUrl) else {
             isLoading = false
@@ -274,6 +301,7 @@ struct MediaView: View {
                                 self.releaseDate = titleData["release_date"] as? String ?? ""
                                 self.score = titleData["score"] as? String ?? ""
                                 self.quality = titleData["quality"] as? String ?? ""
+                                self.seasons = titleData["seasons_count"] as? Int ?? 0
                                 
                                 if let genresData = titleData["genres"] as? [[String: Any]] {
                                     self.genres = genresData.compactMap { $0["name"] as? String }
@@ -296,7 +324,6 @@ struct MediaView: View {
                                 }
                                 
                                 self.isLoading = false
-                                
                                 if let episodesData = props["loadedSeason"] as? [String: Any],
                                    let episodesList = episodesData["episodes"] as? [[String: Any]],
                                    let titleId = episodesData["title_id"] as? Int {

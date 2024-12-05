@@ -64,7 +64,7 @@ struct SearchView: View {
         guard !searchText.isEmpty else { return }
         isLoading = true
         let query = searchText.replacingOccurrences(of: " ", with: "+")
-        let urlString = "https://streamingcommunity.computer/archivio?search=\(query)"
+        let urlString = "https://streamingcommunity.asia/archivio?search=\(query)"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -89,8 +89,8 @@ struct SearchView: View {
                                       let imageUrl = poster["filename"] as? String else {
                                     return nil
                                 }
-                                let href = "https://streamingcommunity.computer/titles/\(id)-\(slug)"
-                                return SearchResult(name: name, imageUrl: "https://cdn.streamingcommunity.computer/images/\(imageUrl)", href: href)
+                                let href = "https://streamingcommunity.asia/titles/\(id)-\(slug)"
+                                return SearchResult(name: name, imageUrl: "https://cdn.streamingcommunity.asia/images/\(imageUrl)", href: href)
                             }
                             self.isLoading = false
                             if !self.searchHistory.contains(self.searchText) {
