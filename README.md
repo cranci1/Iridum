@@ -1,6 +1,6 @@
 # Iridum
 
-A mobile app for the "StreamingCommunity" website.
+An iOS app for the "StreamingCommunity" website.
 
 ## Table of Contents
 - [Iridum](#iridum)
