@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		130217CF2CF4E3AA0035C12F /* IridumApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130217CE2CF4E3AA0035C12F /* IridumApp.swift */; };
 		130217D12CF4E3AA0035C12F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130217D02CF4E3AA0035C12F /* HomeView.swift */; };
 		130217D32CF4E3AC0035C12F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130217D22CF4E3AC0035C12F /* Assets.xcassets */; };
 		130217D62CF4E3AC0035C12F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130217D52CF4E3AC0035C12F /* Preview Assets.xcassets */; };
 		130217E12CF4E4E30035C12F /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 130217E02CF4E4E30035C12F /* SwiftSoup */; };
 		130217E72CF4E7690035C12F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 130217E62CF4E7690035C12F /* Kingfisher */; };
 		130217E92CF4E9060035C12F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130217E82CF4E9060035C12F /* MediaView.swift */; };
+		1320195D2D033D300064CEEC /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320195C2D033D300064CEEC /* SearchView.swift */; };
 		134293812CF75AA7003775BB /* NormalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293802CF75AA7003775BB /* NormalPlayer.swift */; };
 		134293832CF75AF6003775BB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293822CF75AF6003775BB /* SettingsView.swift */; };
 		138C7D422CFC76C000F2F825 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C7D412CFC76C000F2F825 /* LibraryView.swift */; };
@@ -21,12 +21,12 @@
 
 /* Begin PBXFileReference section */
 		130217CB2CF4E3AA0035C12F /* Iridum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iridum.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		130217CE2CF4E3AA0035C12F /* IridumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IridumApp.swift; sourceTree = "<group>"; };
 		130217D02CF4E3AA0035C12F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		130217D22CF4E3AC0035C12F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		130217D52CF4E3AC0035C12F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		130217E82CF4E9060035C12F /* MediaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		1302180A2CF617280035C12F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1320195C2D033D300064CEEC /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		134293802CF75AA7003775BB /* NormalPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalPlayer.swift; sourceTree = "<group>"; };
 		134293822CF75AF6003775BB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		138C7D412CFC76C000F2F825 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
@@ -64,13 +64,13 @@
 		130217CD2CF4E3AA0035C12F /* Iridum */ = {
 			isa = PBXGroup;
 			children = (
-				1302180A2CF617280035C12F /* Info.plist */,
-				134293802CF75AA7003775BB /* NormalPlayer.swift */,
-				130217E82CF4E9060035C12F /* MediaView.swift */,
-				130217CE2CF4E3AA0035C12F /* IridumApp.swift */,
-				134293822CF75AF6003775BB /* SettingsView.swift */,
+				1320195E2D033D4D0064CEEC /* Utils */,
 				130217D02CF4E3AA0035C12F /* HomeView.swift */,
 				138C7D412CFC76C000F2F825 /* LibraryView.swift */,
+				1320195C2D033D300064CEEC /* SearchView.swift */,
+				134293822CF75AF6003775BB /* SettingsView.swift */,
+				130217E82CF4E9060035C12F /* MediaView.swift */,
+				1302180A2CF617280035C12F /* Info.plist */,
 				130217D22CF4E3AC0035C12F /* Assets.xcassets */,
 				130217D42CF4E3AC0035C12F /* Preview Content */,
 			);
@@ -83,6 +83,14 @@
 				130217D52CF4E3AC0035C12F /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1320195E2D033D4D0064CEEC /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				134293802CF75AA7003775BB /* NormalPlayer.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,7 +174,7 @@
 				134293832CF75AF6003775BB /* SettingsView.swift in Sources */,
 				130217E92CF4E9060035C12F /* MediaView.swift in Sources */,
 				130217D12CF4E3AA0035C12F /* HomeView.swift in Sources */,
-				130217CF2CF4E3AA0035C12F /* IridumApp.swift in Sources */,
+				1320195D2D033D300064CEEC /* SearchView.swift in Sources */,
 				138C7D422CFC76C000F2F825 /* LibraryView.swift in Sources */,
 				134293812CF75AA7003775BB /* NormalPlayer.swift in Sources */,
 			);

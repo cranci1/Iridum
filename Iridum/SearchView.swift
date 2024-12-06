@@ -1,8 +1,8 @@
 //
-//  IridumApp.swift
+//  SearchView.swift
 //  Iridum
 //
-//  Created by Francesco on 25/11/24.
+//  Created by Francesco on 06/12/24.
 //
 
 import SwiftUI
@@ -184,3 +184,4 @@ struct ResultsView: View {
         .navigationTitle("Results")
     }
 }
+
