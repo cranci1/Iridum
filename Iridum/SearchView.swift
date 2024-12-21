@@ -17,6 +17,7 @@ struct SearchResult: Identifiable {
 }
 
 struct SearchView: View {
+    @EnvironmentObject private var appSettings: AppSettings
     @State private var searchText: String = ""
     @State private var searchResults: [SearchResult] = []
     @State private var isLoading: Bool = false
@@ -64,7 +65,7 @@ struct SearchView: View {
         guard !searchText.isEmpty else { return }
         isLoading = true
         let query = searchText.replacingOccurrences(of: " ", with: "+")
-        let urlString = "https://streamingcommunity.asia/archivio?search=\(query)"
+        let urlString = "https://\(appSettings.baseDomain)/archivio?search=\(query)"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -89,8 +90,8 @@ struct SearchView: View {
                                       let imageUrl = poster["filename"] as? String else {
                                     return nil
                                 }
-                                let href = "https://streamingcommunity.asia/titles/\(id)-\(slug)"
-                                return SearchResult(name: name, imageUrl: "https://cdn.streamingcommunity.asia/images/\(imageUrl)", href: href)
+                                let href = "https://\(appSettings.baseDomain)/titles/\(id)-\(slug)"
+                                return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                             }
                             self.isLoading = false
                             if !self.searchHistory.contains(self.searchText) {

@@ -46,6 +46,11 @@ struct SettingsView: View {
                         }
                     }
                 }
+                Section(header: Text("Network"), footer: Text("Don't add the 'https://' in front of the url. Thanks")) {
+                    TextField("Base Domain", text: $appSettings.baseDomain)
+                        .keyboardType(.URL)
+                        .autocapitalization(.none)
+                }
             }
             .navigationTitle("Settings")
         }
@@ -54,6 +59,7 @@ struct SettingsView: View {
 
 class AppSettings: ObservableObject {
     @AppStorage("accentColor") var accentColorData: Data?
+    @AppStorage("baseDomain") var baseDomain: String = "streamingcommunity.family"
     
     var accentColor: Color {
         get {

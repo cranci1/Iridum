@@ -10,6 +10,7 @@ import SwiftSoup
 import Kingfisher
 
 struct HomeView: View {
+    @EnvironmentObject private var appSettings: AppSettings
     @State private var sliders: [Slider] = []
     @State private var isLoading: Bool = false
     @State private var isLoaded: Bool = false
@@ -79,7 +80,7 @@ struct HomeView: View {
     
     func fetchSliders() {
         isLoading = true
-        let urlString = "https://streamingcommunity.asia/"
+        let urlString = "https://\(appSettings.baseDomain)"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -109,8 +110,8 @@ struct HomeView: View {
                                           let imageUrl = poster["filename"] as? String else {
                                               return nil
                                           }
-                                    let href = "https://streamingcommunity.asia/titles/\(id)-\(slug)"
-                                    return SearchResult(name: name, imageUrl: "https://cdn.streamingcommunity.asia/images/\(imageUrl)", href: href)
+                                    let href = "https://\(appSettings.baseDomain)/titles/\(id)-\(slug)"
+                                    return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                                 }
                                 return Slider(label: label, titles: titles)
                             }
