@@ -8,7 +8,7 @@
     "iconURL": "https://pbs.twimg.com/profile_images/1692716195181387776/1J4bIRqx_200x200.jpg",
     "stream": "MP4",
     "language": "AR",
-    "extractor": "normal",
+    "extractor": "pattern-mp4",
     "module": [
         {
             "search": {
