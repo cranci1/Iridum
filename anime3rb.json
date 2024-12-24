@@ -1,0 +1,51 @@
+{
+    "name": "Anime3rb",
+    "version": "1.0.0",
+    "author": {
+        "name": "sobet",
+        "website": "https://google.com"
+    },
+    "iconURL": "https://pbs.twimg.com/profile_images/1692716195181387776/1J4bIRqx_200x200.jpg",
+    "stream": "MP4",
+    "language": "AR",
+    "extractor": "normal",
+    "module": [
+        {
+            "search": {
+                "url": "https://anime3rb.com/search",
+                "parameter": "q",
+                "documentSelector": "div.my-2.w-64",
+                "title": "h2.text-ellipsis",
+                "image": {
+                    "url": "img",
+                    "attribute": "src"
+                },
+                "href": "a.poster"
+            },
+            "featured": {
+                "url": "https://www.animeworld.so",
+                "documentSelector": "div.content[data-name=all] div.item",
+                "title": "a.name",
+                "image": {
+                    "url": "img",
+                    "attribute": "src"
+                },
+                "href": "a.poster"
+            },
+            "details": {
+                "baseURL": "https://anime3rb.com",
+                "aliases": {
+                    "selector": "",
+                    "attribute": ""
+                },
+                "synopsis": "div.container div.py-4.flex.flex-col p",
+                "airdate": "",
+                "stars": ""
+            },
+            "episodes": {
+                "selector": "div.videos-container a",
+                "order": "ordered"
+            }
+        }
+    ]
+}
