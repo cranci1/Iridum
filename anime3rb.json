@@ -44,7 +44,8 @@
             },
             "episodes": {
                 "selector": "div.videos-container a",
-                "order": "ordered"
+                "order": "ordered",
+                "pattern": "https://video\\.vid3rb\\.com/player/[\\w-]+\\?token=[\\w]+&(?:amp;)?expires=\\d+"
             }
         }
     ]
