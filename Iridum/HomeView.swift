@@ -76,6 +76,7 @@ struct HomeView: View {
                 }
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle()) // Add this line
     }
     
     func fetchSliders() {
