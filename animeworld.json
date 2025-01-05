@@ -4,7 +4,7 @@
     "language": "English",
     "mediaType": "Anime",
     "searchBaseUrl": "https://www.animeworld.so/search?keyword=%s",
-    "scriptUrl": "https://raw.githubusercontent.com/yourusername/scraping-modules/main/animeworld.js",
+    "scriptUrl": "https://raw.githubusercontent.com/cranci1/Iridum/refs/heads/main/animeworld.js?token=GHSAT0AAAAAACLSIBKFK4YYXUMXCK4WJCJWZ32J6TQ",
     "version": "1.0.0",
     "description": "AnimeWorld scraping module for searching anime content"
 }
