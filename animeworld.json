@@ -1,0 +1,10 @@
+{
+    "author": "cranci1",
+    "iconUrl": "https://example.com/icon.png",
+    "language": "English",
+    "mediaType": "Anime",
+    "searchBaseUrl": "https://www.animeworld.so/search?keyword=%s",
+    "scriptUrl": "https://raw.githubusercontent.com/yourusername/scraping-modules/main/animeworld.js",
+    "version": "1.0.0",
+    "description": "AnimeWorld scraping module for searching anime content"
+}
