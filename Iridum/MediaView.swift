@@ -282,7 +282,7 @@ struct MediaView: View {
                 return
             }
             
-            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            let task = URLSession.custom.dataTask(with: url) { data, response, error in
                 if let error = error {
                     print("Error fetching media details: \(error)")
                     DispatchQueue.main.async {
@@ -398,7 +398,7 @@ struct MediaView: View {
             return
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.custom.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 print("Error fetching play URL: \(error?.localizedDescription ?? "Unknown error")")
                 return
@@ -426,7 +426,7 @@ struct MediaView: View {
             return
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.custom.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 print("Error fetching embed URL: \(error?.localizedDescription ?? "Unknown error")")
                 return

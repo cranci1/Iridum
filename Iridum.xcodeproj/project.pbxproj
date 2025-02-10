@@ -16,6 +16,7 @@
 		1320195D2D033D300064CEEC /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320195C2D033D300064CEEC /* SearchView.swift */; };
 		134293812CF75AA7003775BB /* NormalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293802CF75AA7003775BB /* NormalPlayer.swift */; };
 		134293832CF75AF6003775BB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293822CF75AF6003775BB /* SettingsView.swift */; };
+		134EBB7B2D5A5A9500F10CBC /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134EBB7A2D5A5A9500F10CBC /* URLSession.swift */; };
 		138C7D422CFC76C000F2F825 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C7D412CFC76C000F2F825 /* LibraryView.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		1320195C2D033D300064CEEC /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		134293802CF75AA7003775BB /* NormalPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalPlayer.swift; sourceTree = "<group>"; };
 		134293822CF75AF6003775BB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		134EBB7A2D5A5A9500F10CBC /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		138C7D412CFC76C000F2F825 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				134293802CF75AA7003775BB /* NormalPlayer.swift */,
+				134EBB7A2D5A5A9500F10CBC /* URLSession.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				134293832CF75AF6003775BB /* SettingsView.swift in Sources */,
+				134EBB7B2D5A5A9500F10CBC /* URLSession.swift in Sources */,
 				130217E92CF4E9060035C12F /* MediaView.swift in Sources */,
 				130217D12CF4E3AA0035C12F /* HomeView.swift in Sources */,
 				1320195D2D033D300064CEEC /* SearchView.swift in Sources */,
