@@ -59,7 +59,7 @@ struct SettingsView: View {
 
 class AppSettings: ObservableObject {
     @AppStorage("accentColor") var accentColorData: Data?
-    @AppStorage("baseDomain") var baseDomain: String = "streamingcommunity.family"
+    @AppStorage("baseDomain") var baseDomain: String = "streamingcommunity.lu"
     
     var accentColor: Color {
         get {

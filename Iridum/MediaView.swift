@@ -217,6 +217,7 @@ struct MediaView: View {
                                                             .font(.caption2)
                                                             .foregroundColor(.secondary)
                                                             .lineLimit(3)
+                                                            .multilineTextAlignment(.leading)
                                                     }
                                                     .frame(width: 240, alignment: .leading)
                                                 }
@@ -433,47 +434,67 @@ struct MediaView: View {
             }
             
             if let html = String(data: data, encoding: .utf8) {
-                let pattern = #"https:\/\/vixcloud\.co\/playlist\/\d+"#
-                if let regex = try? NSRegularExpression(pattern: pattern, options: []),
-                   let match = regex.firstMatch(in: html, options: [], range: NSRange(location: 0, length: html.utf16.count)) {
-                    
-                    let start = html.index(html.startIndex, offsetBy: match.range.location)
-                    let end = html.index(start, offsetBy: match.range.length)
-                    var extractedUrl = String(html[start..<end])
-                    
-                    if extractedUrl.hasSuffix("'") {
-                        extractedUrl.removeLast()
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self.playlistUrl = extractedUrl
-                        print(playlistUrl)
+                if html.contains("window.masterPlaylist") {
+                    do {
+                        let urlPattern = #"url:\s*'([^']+)'"#
+                        guard let urlRegex = try? NSRegularExpression(pattern: urlPattern),
+                              let urlMatch = urlRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
+                              let urlRange = Range(urlMatch.range(at: 1), in: html) else {
+                            print("Failed to extract URL")
+                            return
+                        }
+                        let baseUrl = String(html[urlRange])
                         
-                        if let url = URL(string: extractedUrl) {
-                            let newPlayer = AVPlayer(url: url)
-                            self.player = newPlayer
-                            let playerViewController = NormalPlayer()
-                            playerViewController.player = newPlayer
+                        let tokenPattern = #"'token':\s*'([^']+)'"#
+                        guard let tokenRegex = try? NSRegularExpression(pattern: tokenPattern),
+                              let tokenMatch = tokenRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
+                              let tokenRange = Range(tokenMatch.range(at: 1), in: html) else {
+                            print("Failed to extract token")
+                            return
+                        }
+                        let token = String(html[tokenRange])
+                        
+                        let expiresPattern = #"'expires':\s*'([^']+)'"#
+                        guard let expiresRegex = try? NSRegularExpression(pattern: expiresPattern),
+                              let expiresMatch = expiresRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
+                              let expiresRange = Range(expiresMatch.range(at: 1), in: html) else {
+                            print("Failed to extract expires")
+                            return
+                        }
+                        let expires = String(html[expiresRange])
+                        
+                        let finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)"
+                        
+                        DispatchQueue.main.async {
+                            self.playlistUrl = finalUrl
+                            print("Final playlist URL: \(finalUrl)")
                             
-                            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                               let rootVC = windowScene.windows.first?.rootViewController {
-                                rootVC.present(playerViewController, animated: true) {
-                                    let lastPlayedTime = UserDefaults.standard.double(forKey: "lastPlayedTime_\(extractedUrl)")
-                                    if lastPlayedTime > 0 {
-                                        let seekTime = CMTime(seconds: lastPlayedTime, preferredTimescale: 1)
-                                        newPlayer.seek(to: seekTime) { _ in
+                            if let url = URL(string: finalUrl) {
+                                let newPlayer = AVPlayer(url: url)
+                                self.player = newPlayer
+                                let playerViewController = NormalPlayer()
+                                playerViewController.player = newPlayer
+                                
+                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                   let rootVC = windowScene.windows.first?.rootViewController {
+                                    rootVC.present(playerViewController, animated: true) {
+                                        let lastPlayedTime = UserDefaults.standard.double(forKey: "lastPlayedTime_\(finalUrl)")
+                                        if lastPlayedTime > 0 {
+                                            let seekTime = CMTime(seconds: lastPlayedTime, preferredTimescale: 1)
+                                            newPlayer.seek(to: seekTime) { _ in
+                                                newPlayer.play()
+                                            }
+                                        } else {
                                             newPlayer.play()
                                         }
-                                    } else {
-                                        newPlayer.play()
+                                        self.addPeriodicTimeObserver(fullURL: finalUrl)
                                     }
-                                    self.addPeriodicTimeObserver(fullURL: extractedUrl)
                                 }
                             }
                         }
                     }
                 } else {
-                    print("No matching URL found in the HTML")
+                    print("No window.masterPlaylist found in the HTML")
                 }
             }
         }.resume()
