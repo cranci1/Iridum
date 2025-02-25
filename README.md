@@ -1,6 +1,6 @@
 # Iridum
 
-An iOS app made to scrape the "streamingcommunity" site.
+An iOS app made to scrape the "StreamingCommunity" site.
 
 ## Table of Contents
 - [Compatibility](#compatibility)
