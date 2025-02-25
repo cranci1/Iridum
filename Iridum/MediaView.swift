@@ -276,105 +276,105 @@ struct MediaView: View {
     }
     
     func fetchMediaDetails() {
-            let searchUrl = "\(href)/stagione-\(selectedSeason)"
-            
-            guard let url = URL(string: searchUrl) else {
-                isLoading = false
+        let searchUrl = "\(href)/stagione-\(selectedSeason)"
+        
+        guard let url = URL(string: searchUrl) else {
+            isLoading = false
+            return
+        }
+        
+        let task = URLSession.custom.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error fetching media details: \(error)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
                 return
             }
             
-            let task = URLSession.custom.dataTask(with: url) { data, response, error in
-                if let error = error {
-                    print("Error fetching media details: \(error)")
-                    DispatchQueue.main.async {
-                        self.isLoading = false
-                    }
-                    return
+            guard let data = data, let html = String(data: data, encoding: .utf8) else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
+                return
+            }
+            
+            do {
+                let document = try SwiftSoup.parse(html)
                 
-                guard let data = data, let html = String(data: data, encoding: .utf8) else {
-                    DispatchQueue.main.async {
-                        self.isLoading = false
-                    }
-                    return
-                }
-                
-                do {
-                    let document = try SwiftSoup.parse(html)
-                    
-                    if let appDiv = try document.getElementById("app") {
-                        let dataPage = try appDiv.attr("data-page")
-                        if let jsonData = dataPage.data(using: .utf8) {
-                            if let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
-                               let props = json["props"] as? [String: Any],
-                               let titleData = props["title"] as? [String: Any] {
-                                DispatchQueue.main.async {
-                                    self.title = titleData["name"] as? String ?? ""
-                                    self.originalTitle = titleData["original_name"] as? String ?? ""
-                                    self.description = titleData["plot"] as? String ?? ""
-                                    self.runtime = titleData["runtime"] as? Int ?? 0
-                                    self.releaseDate = titleData["release_date"] as? String ?? ""
-                                    self.score = titleData["score"] as? String ?? ""
-                                    self.quality = titleData["quality"] as? String ?? ""
-                                    self.seasons = titleData["seasons_count"] as? Int ?? 0
-                                    
-                                    if let genresData = titleData["genres"] as? [[String: Any]] {
-                                        self.genres = genresData.compactMap { $0["name"] as? String }
-                                    }
-                                    
-                                    if let actorsData = titleData["main_actors"] as? [[String: Any]] {
-                                        self.mainActors = actorsData.compactMap { $0["name"] as? String }
-                                    }
-                                    
-                                    if let directorsData = titleData["main_directors"] as? [[String: Any]] {
-                                        self.directors = directorsData.compactMap { $0["name"] as? String }
-                                    }
-                                    
-                                    if let ageValue = titleData["age"] as? Int {
-                                        self.age = "\(ageValue)"
-                                    } else if let ageString = titleData["age"] as? String {
-                                        self.age = ageString
-                                    } else {
-                                        self.age = ""
-                                    }
-                                    
-                                    if let id = titleData["id"] as? Int {
-                                        self.playUrl = "https://\(AppSettings().baseDomain)/iframe/\(id)"
-                                    }
-                                    
-                                    self.isLoading = false
-                                    if let episodesData = props["loadedSeason"] as? [String: Any],
-                                       let episodesList = episodesData["episodes"] as? [[String: Any]],
-                                       let titleId = episodesData["title_id"] as? Int {
-                                        self.episodes = episodesList.compactMap { episodeData in
-                                            guard let id = episodeData["id"] as? Int,
-                                                  let name = episodeData["name"] as? String,
-                                                  let plot = episodeData["plot"] as? String,
-                                                  let number = episodeData["number"] as? Int,
-                                                  let images = episodeData["images"] as? [[String: Any]],
-                                                  let firstImage = images.first,
-                                                  let filename = firstImage["filename"] as? String else {
-                                                      return nil
-                                                  }
-                                            
-                                            return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
-                                        }
+                if let appDiv = try document.getElementById("app") {
+                    let dataPage = try appDiv.attr("data-page")
+                    if let jsonData = dataPage.data(using: .utf8) {
+                        if let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any],
+                           let props = json["props"] as? [String: Any],
+                           let titleData = props["title"] as? [String: Any] {
+                            DispatchQueue.main.async {
+                                self.title = titleData["name"] as? String ?? ""
+                                self.originalTitle = titleData["original_name"] as? String ?? ""
+                                self.description = titleData["plot"] as? String ?? ""
+                                self.runtime = titleData["runtime"] as? Int ?? 0
+                                self.releaseDate = titleData["release_date"] as? String ?? ""
+                                self.score = titleData["score"] as? String ?? ""
+                                self.quality = titleData["quality"] as? String ?? ""
+                                self.seasons = titleData["seasons_count"] as? Int ?? 0
+                                
+                                if let genresData = titleData["genres"] as? [[String: Any]] {
+                                    self.genres = genresData.compactMap { $0["name"] as? String }
+                                }
+                                
+                                if let actorsData = titleData["main_actors"] as? [[String: Any]] {
+                                    self.mainActors = actorsData.compactMap { $0["name"] as? String }
+                                }
+                                
+                                if let directorsData = titleData["main_directors"] as? [[String: Any]] {
+                                    self.directors = directorsData.compactMap { $0["name"] as? String }
+                                }
+                                
+                                if let ageValue = titleData["age"] as? Int {
+                                    self.age = "\(ageValue)"
+                                } else if let ageString = titleData["age"] as? String {
+                                    self.age = ageString
+                                } else {
+                                    self.age = ""
+                                }
+                                
+                                if let id = titleData["id"] as? Int {
+                                    self.playUrl = "https://\(AppSettings().baseDomain)/iframe/\(id)"
+                                }
+                                
+                                self.isLoading = false
+                                if let episodesData = props["loadedSeason"] as? [String: Any],
+                                   let episodesList = episodesData["episodes"] as? [[String: Any]],
+                                   let titleId = episodesData["title_id"] as? Int {
+                                    self.episodes = episodesList.compactMap { episodeData in
+                                        guard let id = episodeData["id"] as? Int,
+                                              let name = episodeData["name"] as? String,
+                                              let plot = episodeData["plot"] as? String,
+                                              let number = episodeData["number"] as? Int,
+                                              let images = episodeData["images"] as? [[String: Any]],
+                                              let firstImage = images.first,
+                                              let filename = firstImage["filename"] as? String else {
+                                                  return nil
+                                              }
+                                        
+                                        return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
                                     }
                                 }
                             }
                         }
                     }
-                    
-                } catch {
-                    print("Error parsing media details: \(error)")
-                    DispatchQueue.main.async {
-                        self.isLoading = false
-                    }
+                }
+                
+            } catch {
+                print("Error parsing media details: \(error)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
             }
-            
-            task.resume()
         }
+        
+        task.resume()
+    }
     
     func toggleBookmark() {
         if isBookmarked {
@@ -440,30 +440,35 @@ struct MediaView: View {
                         guard let urlRegex = try? NSRegularExpression(pattern: urlPattern),
                               let urlMatch = urlRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let urlRange = Range(urlMatch.range(at: 1), in: html) else {
-                            print("Failed to extract URL")
-                            return
-                        }
+                                  print("Failed to extract URL")
+                                  return
+                              }
                         let baseUrl = String(html[urlRange])
                         
                         let tokenPattern = #"'token':\s*'([^']+)'"#
                         guard let tokenRegex = try? NSRegularExpression(pattern: tokenPattern),
                               let tokenMatch = tokenRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let tokenRange = Range(tokenMatch.range(at: 1), in: html) else {
-                            print("Failed to extract token")
-                            return
-                        }
+                                  print("Failed to extract token")
+                                  return
+                              }
                         let token = String(html[tokenRange])
                         
                         let expiresPattern = #"'expires':\s*'([^']+)'"#
                         guard let expiresRegex = try? NSRegularExpression(pattern: expiresPattern),
                               let expiresMatch = expiresRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let expiresRange = Range(expiresMatch.range(at: 1), in: html) else {
-                            print("Failed to extract expires")
-                            return
-                        }
+                                  print("Failed to extract expires")
+                                  return
+                              }
                         let expires = String(html[expiresRange])
                         
-                        let finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)"
+                        let finalUrl: String
+                        if baseUrl.hasSuffix("?b=1") {
+                            finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)"
+                        } else {
+                            finalUrl = "\(baseUrl)?token=\(token)&expires=\(expires)"
+                        }
                         
                         DispatchQueue.main.async {
                             self.playlistUrl = finalUrl

@@ -12,7 +12,7 @@ struct SettingsView: View {
     @AppStorage("showOriginalTitle") private var showOriginalTitle = false
     @AppStorage("showDirector") private var showDirector = false
     @AppStorage("showCast") private var showCast = false
-    @AppStorage("holdSpeedPlayer") private var holdSpeedPlayer: Double = 0.5
+    @AppStorage("holdSpeedPlayer") private var holdSpeedPlayer: Double = 2.0
     @EnvironmentObject private var appSettings: AppSettings
     
     var body: some View {
@@ -65,8 +65,8 @@ class AppSettings: ObservableObject {
         get {
             guard let data = accentColorData,
                   let uiColor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: data) else {
-                return .mint
-            }
+                      return .mint
+                  }
             return Color(uiColor)
         }
         set {

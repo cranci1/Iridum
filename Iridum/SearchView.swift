@@ -24,7 +24,7 @@ struct SearchView: View {
     @State private var navigateToResults: Bool = false
     
     @State private var searchHistory: [String] = UserDefaults.standard.stringArray(forKey: "SearchHistory") ?? []
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -56,7 +56,7 @@ struct SearchView: View {
                         EmptyView()
                     }
                 )
-                .hidden()
+                    .hidden()
             }
         }
     }
@@ -88,8 +88,8 @@ struct SearchView: View {
                                       let images = titleDict["images"] as? [[String: Any]],
                                       let poster = images.first(where: { $0["type"] as? String == "poster" }),
                                       let imageUrl = poster["filename"] as? String else {
-                                    return nil
-                                }
+                                          return nil
+                                      }
                                 let href = "https://\(appSettings.baseDomain)/titles/\(id)-\(slug)"
                                 return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                             }
@@ -120,7 +120,7 @@ struct SearchView: View {
 struct SearchBar: View {
     @Binding var text: String
     var onSearchButtonClicked: () -> Void
-
+    
     var body: some View {
         HStack {
             TextField("Search...", text: $text, onCommit: onSearchButtonClicked)
@@ -134,7 +134,7 @@ struct SearchBar: View {
                             .foregroundColor(.gray)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
-
+                        
                         if !text.isEmpty {
                             Button(action: {
                                 self.text = ""
@@ -153,7 +153,7 @@ struct SearchBar: View {
 
 struct ResultsView: View {
     let results: [SearchResult]
-
+    
     var body: some View {
         List {
             ForEach(results) { result in

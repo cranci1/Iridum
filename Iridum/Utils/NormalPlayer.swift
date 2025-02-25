@@ -48,7 +48,7 @@ class NormalPlayer: AVPlayerViewController {
         guard let player = player else { return }
         originalRate = player.rate
         let holdSpeed = UserDefaults.standard.float(forKey: "holdSpeedPlayer")
-        player.rate = holdSpeed
+        player.rate = holdSpeed > 0 ? holdSpeed : 2.0
     }
     
     private func endHoldSpeed() {
