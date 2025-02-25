@@ -42,5 +42,6 @@ Any concerns regarding copyright infringement (DMCA) should be directed to the o
 
 The developer(s) of Iridium disclaim all responsibility for how users interact with third-party content accessed through this application.
 
+---
 
 Thanks to [50/50](https://github.com/50n50) for the logo.
