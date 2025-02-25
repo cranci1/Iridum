@@ -41,3 +41,6 @@ Iridium does not host any content whatsoever. This application merely scrapes an
 Any concerns regarding copyright infringement (DMCA) should be directed to the original content hosting sites, not to Iridium or its developers. As Iridium does not host, store, or distribute any content, DMCA notices sent to Iridium's developers cannot be processed. The appropriate parties for such notices are the websites where the content is actually hosted.
 
 The developer(s) of Iridium disclaim all responsibility for how users interact with third-party content accessed through this application.
+
+
+Thanks to [50/50](https://github.com/50n50) for the logo.
