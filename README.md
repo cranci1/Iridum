@@ -1,24 +1,22 @@
 # Iridum
 
-An iOS app for the "StreamingCommunity" website.
+An iOS app made to scrape the "streamingcommunity" site.
 
 ## Table of Contents
-- [Iridum](#iridum)
-  - [Table of Contents](#table-of-contents)
-  - [Compatibility](#compatibility)
-  - [License](#license)
-  - [Legal](#legal)
+- [Compatibility](#compatibility)
+- [License](#license)
+- [Legal Disclaimer](#legal-disclaimer)
 
 ## Compatibility
 
-- iOS/iPadOS 15.0 or later
+- iOS/iPadOS 15.0 or later, made entirely with SwiftUI, only available via sideloading, no Testflight or AppStore link.
 
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 ```
-Copyright © 2024 cranci. All rights reserved.
+Copyright © 2024-2025 cranci. All rights reserved.
 
 Ryu is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,10 +32,12 @@ You should have received a copy of the GNU General Public License
 along with Ryu. If not, see <https://www.gnu.org/licenses/>.
 ```
 
-## Legal
+## Legal Disclaimer
 
-The content available is not affiliated with the developer, all contents are obtained by non-affiliated sources. Iridum doesn't store anything server side.
+**Iridium is not designed for piracy or copyright infringement purposes.**
 
-Iridum is not made to promote piracy, all this content are accessible by anyone anywhere very easily.
+Iridium does not host any content whatsoever. This application merely scrapes and aggregates information that is already publicly available on the internet. The developer(s) of Iridium have no affiliation with any content providers whose information may be accessed through this application.
 
-I am not responsible if the user chooses to download anything; that is entirely their responsibility.
+Any concerns regarding copyright infringement (DMCA) should be directed to the original content hosting sites, not to Iridium or its developers. As Iridium does not host, store, or distribute any content, DMCA notices sent to Iridium's developers cannot be processed. The appropriate parties for such notices are the websites where the content is actually hosted.
+
+The developer(s) of Iridium disclaim all responsibility for how users interact with third-party content accessed through this application.
