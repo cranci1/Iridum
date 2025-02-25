@@ -9,7 +9,7 @@ An iOS app made to scrape the "streamingcommunity" site.
 
 ## Compatibility
 
-- iOS/iPadOS 15.0 or later, made entirely with SwiftUI, only available via sideloading, no Testflight or AppStore link.
+iOS/iPadOS 15.0 or later, made entirely with SwiftUI, only available via sideloading, no Testflight or AppStore link.
 
 ## License
 
