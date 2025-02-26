@@ -59,6 +59,7 @@ struct SearchView: View {
                     .hidden()
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     func performSearch() {
@@ -183,7 +184,6 @@ struct ResultsView: View {
             }
         }
         .navigationTitle("Results")
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

@@ -72,11 +72,14 @@ class AppSettings: ObservableObject {
             return _baseDomain
         }
         set {
-            if newValue.lowercased().hasPrefix("https://") {
-                _baseDomain = String(newValue.dropFirst(8))
-            } else {
-                _baseDomain = newValue
+            var processedValue = newValue
+            if processedValue.lowercased().hasPrefix("https://") {
+                processedValue = String(processedValue.dropFirst(8))
             }
+            if processedValue.hasSuffix("/") {
+                processedValue = String(processedValue.dropLast())
+            }
+            _baseDomain = processedValue
         }
     }
     
