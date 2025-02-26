@@ -253,6 +253,7 @@ struct MediaView: View {
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitle("")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {

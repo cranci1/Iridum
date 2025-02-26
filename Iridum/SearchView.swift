@@ -183,6 +183,7 @@ struct ResultsView: View {
             }
         }
         .navigationTitle("Results")
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

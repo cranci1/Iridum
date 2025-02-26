@@ -96,8 +96,9 @@ struct LibraryView: View {
                     .padding()
                 }
             }
-            .navigationTitle("Library")
         }
+        .navigationTitle("Library")
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
