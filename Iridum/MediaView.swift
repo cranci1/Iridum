@@ -409,7 +409,7 @@ struct MediaView: View {
                 do {
                     let document = try SwiftSoup.parse(html)
                     if let newEmbedUrl = try document.select("iframe").first()?.attr("src") {
-                        fetchPlaylistUrl(from: newEmbedUrl)
+                        fetchPlaylistUrl(from: newEmbedUrl, fullUrl: url.absoluteString)
                     }
                 } catch {
                     print("Error parsing play URL HTML: \(error)")
@@ -422,7 +422,7 @@ struct MediaView: View {
         return episodes.first?.playUrl
     }
     
-    func fetchPlaylistUrl(from embedUrl: String) {
+    func fetchPlaylistUrl(from embedUrl: String, fullUrl: String) {
         guard let url = URL(string: embedUrl) else {
             return
         }
@@ -483,7 +483,7 @@ struct MediaView: View {
                                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                    let rootVC = windowScene.windows.first?.rootViewController {
                                     rootVC.present(playerViewController, animated: true) {
-                                        let lastPlayedTime = UserDefaults.standard.double(forKey: "lastPlayedTime_\(finalUrl)")
+                                        let lastPlayedTime = UserDefaults.standard.double(forKey: "lastPlayedTime_\(fullUrl)")
                                         if lastPlayedTime > 0 {
                                             let seekTime = CMTime(seconds: lastPlayedTime, preferredTimescale: 1)
                                             newPlayer.seek(to: seekTime) { _ in
@@ -492,7 +492,7 @@ struct MediaView: View {
                                         } else {
                                             newPlayer.play()
                                         }
-                                        self.addPeriodicTimeObserver(fullURL: finalUrl)
+                                        self.addPeriodicTimeObserver(fullURL: fullUrl)
                                     }
                                 }
                             }

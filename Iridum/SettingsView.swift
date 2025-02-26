@@ -46,7 +46,7 @@ struct SettingsView: View {
                         }
                     }
                 }
-                Section(header: Text("Network"), footer: Text("Don't add the 'https://' in front of the url. Thanks")) {
+                Section(header: Text("Network"), footer: Text("Insert the StreamingCommunity URL, and dont't add the 'https://' in front of the url. Thanks")) {
                     TextField("Base Domain", text: $appSettings.baseDomain)
                         .keyboardType(.URL)
                         .autocapitalization(.none)
@@ -59,7 +59,7 @@ struct SettingsView: View {
 
 class AppSettings: ObservableObject {
     @AppStorage("accentColor") var accentColorData: Data?
-    @AppStorage("baseDomain") var baseDomain: String = "streamingcommunity.lu"
+    @AppStorage("baseDomain") var baseDomain: String = "Insert url here."
     
     var accentColor: Color {
         get {
