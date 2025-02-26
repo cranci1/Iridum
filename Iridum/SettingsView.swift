@@ -18,6 +18,12 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
+                Section(header: Text("Network"), footer: Text("Insert the StreamingCommunity URL, and dont't add the 'https://' in front of the url. Thanks")) {
+                    TextField("Base Domain", text: $appSettings.baseDomain)
+                        .keyboardType(.URL)
+                        .autocapitalization(.none)
+                }
+                
                 Section(header: Text("Appearance")) {
                     ColorPicker("Accent Color", selection: Binding(
                         get: { appSettings.accentColor },
@@ -46,10 +52,10 @@ struct SettingsView: View {
                         }
                     }
                 }
-                Section(header: Text("Network"), footer: Text("Insert the StreamingCommunity URL, and dont't add the 'https://' in front of the url. Thanks")) {
-                    TextField("Base Domain", text: $appSettings.baseDomain)
-                        .keyboardType(.URL)
-                        .autocapitalization(.none)
+                Section(header: Text("Debug")) {
+                    NavigationLink(destination: SettingsLogsView()) {
+                        Text("Logs")
+                    }
                 }
             }
             .navigationTitle("Settings")

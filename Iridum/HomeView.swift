@@ -123,7 +123,7 @@ struct HomeView: View {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    print("Error fetching or parsing data: \(error)")
+                    Logger.shared.log("Error fetching or parsing data: \(error)")
                     self.isLoading = false
                     self.isRefreshing = false
                 }

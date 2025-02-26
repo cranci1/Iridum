@@ -104,7 +104,7 @@ struct SearchView: View {
                 }
             } catch {
                 DispatchQueue.main.async {
-                    print("Error fetching or parsing data: \(error)")
+                    Logger.shared.log("Error fetching or parsing data: \(error)")
                     self.isLoading = false
                 }
             }

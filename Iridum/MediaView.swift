@@ -285,7 +285,7 @@ struct MediaView: View {
         
         let task = URLSession.custom.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("Error fetching media details: \(error)")
+                Logger.shared.log("Error fetching media details: \(error)")
                 DispatchQueue.main.async {
                     self.isLoading = false
                 }
@@ -366,7 +366,7 @@ struct MediaView: View {
                 }
                 
             } catch {
-                print("Error parsing media details: \(error)")
+                Logger.shared.log("Error parsing media details: \(error)")
                 DispatchQueue.main.async {
                     self.isLoading = false
                 }
@@ -395,13 +395,13 @@ struct MediaView: View {
     
     func startMediaUrlChain(url: String) {
         guard let url = URL(string: url) else {
-            print("Invalid play URL")
+            Logger.shared.log("Invalid play URL")
             return
         }
         
         URLSession.custom.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                print("Error fetching play URL: \(error?.localizedDescription ?? "Unknown error")")
+                Logger.shared.log("Error fetching play URL: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
@@ -412,7 +412,7 @@ struct MediaView: View {
                         fetchPlaylistUrl(from: newEmbedUrl, fullUrl: url.absoluteString)
                     }
                 } catch {
-                    print("Error parsing play URL HTML: \(error)")
+                    Logger.shared.log("Error parsing play URL HTML: \(error)")
                 }
             }
         }.resume()
@@ -429,7 +429,7 @@ struct MediaView: View {
         
         URLSession.custom.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                print("Error fetching embed URL: \(error?.localizedDescription ?? "Unknown error")")
+                Logger.shared.log("Error fetching embed URL: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
@@ -440,7 +440,7 @@ struct MediaView: View {
                         guard let urlRegex = try? NSRegularExpression(pattern: urlPattern),
                               let urlMatch = urlRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let urlRange = Range(urlMatch.range(at: 1), in: html) else {
-                                  print("Failed to extract URL")
+                                  Logger.shared.log("Failed to extract URL")
                                   return
                               }
                         let baseUrl = String(html[urlRange])
@@ -449,7 +449,7 @@ struct MediaView: View {
                         guard let tokenRegex = try? NSRegularExpression(pattern: tokenPattern),
                               let tokenMatch = tokenRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let tokenRange = Range(tokenMatch.range(at: 1), in: html) else {
-                                  print("Failed to extract token")
+                                  Logger.shared.log("Failed to extract token")
                                   return
                               }
                         let token = String(html[tokenRange])
@@ -458,7 +458,7 @@ struct MediaView: View {
                         guard let expiresRegex = try? NSRegularExpression(pattern: expiresPattern),
                               let expiresMatch = expiresRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let expiresRange = Range(expiresMatch.range(at: 1), in: html) else {
-                                  print("Failed to extract expires")
+                                  Logger.shared.log("Failed to extract expires")
                                   return
                               }
                         let expires = String(html[expiresRange])
@@ -472,7 +472,7 @@ struct MediaView: View {
                         
                         DispatchQueue.main.async {
                             self.playlistUrl = finalUrl
-                            print("Final playlist URL: \(finalUrl)")
+                            Logger.shared.log("Final playlist URL: \(finalUrl)")
                             
                             if let url = URL(string: finalUrl) {
                                 let newPlayer = AVPlayer(url: url)
@@ -499,7 +499,7 @@ struct MediaView: View {
                         }
                     }
                 } else {
-                    print("No window.masterPlaylist found in the HTML")
+                    Logger.shared.log("No window.masterPlaylist found in the HTML")
                 }
             }
         }.resume()
