@@ -59,7 +59,20 @@ struct SettingsView: View {
 
 class AppSettings: ObservableObject {
     @AppStorage("accentColor") var accentColorData: Data?
-    @AppStorage("baseDomain") var baseDomain: String = "Insert url here."
+    @AppStorage("baseDomain") var _baseDomain: String = "Insert url here."
+    
+    var baseDomain: String {
+        get {
+            return _baseDomain
+        }
+        set {
+            if newValue.lowercased().hasPrefix("https://") {
+                _baseDomain = String(newValue.dropFirst(8))
+            } else {
+                _baseDomain = newValue
+            }
+        }
+    }
     
     var accentColor: Color {
         get {
