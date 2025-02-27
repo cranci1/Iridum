@@ -476,7 +476,15 @@ struct MediaView: View {
                             Logger.shared.log("Final playlist URL: \(finalUrl)")
                             
                             if let url = URL(string: finalUrl) {
-                                let newPlayer = AVPlayer(url: url)
+                                let headers = [
+                                    "Referer": embedUrl,
+                                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0"
+                                ]
+                                let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
+                                
+                                let playerItem = AVPlayerItem(asset: asset)
+                                
+                                let newPlayer = AVPlayer(playerItem: playerItem)
                                 self.player = newPlayer
                                 let playerViewController = NormalPlayer()
                                 playerViewController.player = newPlayer
