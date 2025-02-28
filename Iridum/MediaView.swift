@@ -466,9 +466,9 @@ struct MediaView: View {
                         
                         let finalUrl: String
                         if baseUrl.hasSuffix("?b=1") {
-                            finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)"
+                            finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)&h=1"
                         } else {
-                            finalUrl = "\(baseUrl)?token=\(token)&expires=\(expires)"
+                            finalUrl = "\(baseUrl)?token=\(token)&expires=\(expires)&h=1"
                         }
                         
                         DispatchQueue.main.async {

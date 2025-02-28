@@ -37,6 +37,7 @@ struct SearchView: View {
                                     performSearch()
                                 }) {
                                     Text(historyItem)
+                                        .foregroundColor(.primary)
                                 }
                             }
                             .onDelete(perform: deleteHistoryItem)
