@@ -52,6 +52,8 @@ struct MediaView: View {
     @State private var selectedSeason: Int = 1
     @State private var showSeasonMenu: Bool = false
     
+    @AppStorage("patchStream") var patchStream = false
+    
     @EnvironmentObject private var libraryViewModel: LibraryViewModel
     
     init(title: String, imageUrl: String, href: String) {
@@ -466,9 +468,9 @@ struct MediaView: View {
                         
                         let finalUrl: String
                         if baseUrl.hasSuffix("?b=1") {
-                            finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)&h=1"
+                            finalUrl = "\(baseUrl)&token=\(token)&expires=\(expires)\(patchStream ? "&h=1" : "")"
                         } else {
-                            finalUrl = "\(baseUrl)?token=\(token)&expires=\(expires)&h=1"
+                            finalUrl = "\(baseUrl)?token=\(token)&expires=\(expires)\(patchStream ? "&h=1" : "")"
                         }
                         
                         DispatchQueue.main.async {

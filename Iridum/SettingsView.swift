@@ -12,6 +12,7 @@ struct SettingsView: View {
     @AppStorage("showOriginalTitle") private var showOriginalTitle = false
     @AppStorage("showDirector") private var showDirector = false
     @AppStorage("showCast") private var showCast = false
+    @AppStorage("patchStream") private var patchStream = false
     @AppStorage("holdSpeedPlayer") private var holdSpeedPlayer: Double = 2.0
     @EnvironmentObject private var appSettings: AppSettings
     
@@ -53,6 +54,8 @@ struct SettingsView: View {
                     }
                 }
                 Section(header: Text("Debug")) {
+                    Toggle("Stream Patcher", isOn: $patchStream)
+                    
                     NavigationLink(destination: SettingsLogsView()) {
                         Text("Logs")
                     }
