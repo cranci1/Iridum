@@ -158,7 +158,7 @@ struct MediaView: View {
                         .disabled(playUrl.isEmpty && watchUrl.isEmpty && episodes.isEmpty)
                         
                         if episodes.isEmpty {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 8) {
                                 Text("Overall Progress")
                                     .font(.headline)
                                 ProgressView(value: overallShowProgress)
@@ -378,6 +378,9 @@ struct MediaView: View {
                                         
                                         return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
                                     }
+                                    
+                                    loadEpisodeProgress()
+                                    calculateOverallProgress()
                                 }
                             }
                         }
@@ -393,6 +396,29 @@ struct MediaView: View {
         }
         
         task.resume()
+    }
+    
+    func loadEpisodeProgress() {
+        for episode in episodes {
+            let progressKey = "episode_progress_\(episode.id)"
+            if let progress = UserDefaults.standard.object(forKey: progressKey) as? Double {
+                episodeProgress[episode.id] = progress
+            }
+        }
+    }
+    
+    func calculateOverallProgress() {
+        var totalProgress = 0.0
+        var episodeCount = 0
+        
+        for episode in episodes {
+            if let progress = episodeProgress[episode.id], progress > 0 {
+                totalProgress += progress
+                episodeCount += 1
+            }
+        }
+        
+        overallShowProgress = episodeCount > 0 ? totalProgress / Double(episodeCount) : 0.0
     }
     
     func toggleBookmark() {
@@ -554,9 +580,9 @@ struct MediaView: View {
             if let episode = episodes.first(where: { fullURL.contains("\($0.id)") }) {
                 let progress = currentTime / duration
                 episodeProgress[episode.id] = progress
+                UserDefaults.standard.set(progress, forKey: "episode_progress_\(episode.id)")
                 
-                let totalProgress = episodeProgress.values.reduce(0, +)
-                overallShowProgress = totalProgress / Double(episodes.count)
+                calculateOverallProgress()
             }
         }
     }
