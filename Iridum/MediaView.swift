@@ -156,6 +156,16 @@ struct MediaView: View {
                         .padding(.horizontal)
                         .disabled(playUrl.isEmpty && watchUrl.isEmpty && episodes.isEmpty)
                         
+                        if episodes.isEmpty {
+                            VStack(alignment: .leading) {
+                                Text("Overall Progress")
+                                    .font(.headline)
+                                    .padding(.horizontal)
+                                ProgressView(value: overallShowProgress)
+                                    .padding(.horizontal)
+                            }
+                        }
+                        
                         if !description.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Description")
@@ -235,16 +245,6 @@ struct MediaView: View {
                                     }
                                     .padding(.horizontal)
                                 }
-                            }
-                        }
-                        
-                        if !episodes.isEmpty {
-                            VStack(alignment: .leading) {
-                                Text("Overall Progress")
-                                    .font(.headline)
-                                    .padding(.horizontal)
-                                ProgressView(value: overallShowProgress)
-                                    .padding(.horizontal)
                             }
                         }
                         
