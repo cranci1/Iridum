@@ -19,7 +19,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("Network"), footer: Text("Insert the StreamingCommunity URL, and dont't add the 'https://' in front of the url. Thanks")) {
+                Section(header: Text("Network"), footer: Text("Insert the StreamingCommunity URL, and don't add the 'https://' in front of the url. Thanks")) {
                     TextField("Base Domain", text: $appSettings.baseDomain)
                         .keyboardType(.URL)
                         .autocapitalization(.none)

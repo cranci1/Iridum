@@ -7,7 +7,7 @@
 
 import AVKit
 
-class NormalPlayer: AVPlayerViewController {
+class NormalPlayer: AVPlayerViewController, AVPlayerViewControllerDelegate {
     private var originalRate: Float = 1.0
     private var holdGesture: UILongPressGestureRecognizer?
     
@@ -15,6 +15,7 @@ class NormalPlayer: AVPlayerViewController {
         super.viewDidLoad()
         setupHoldGesture()
         setupAudioSession()
+        setupPictureInPictureHandling()
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -30,6 +31,35 @@ class NormalPlayer: AVPlayerViewController {
         holdGesture?.minimumPressDuration = 0.5
         if let holdGesture = holdGesture {
             view.addGestureRecognizer(holdGesture)
+        }
+    }
+    
+    private func setupPictureInPictureHandling() {
+        delegate = self
+        
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            self.allowsPictureInPicturePlayback = true
+        }
+    }
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        let windowScene = UIApplication.shared.connectedScenes
+            .filter { $0.activationState == .foregroundActive }
+            .compactMap { $0 as? UIWindowScene }
+            .first
+        
+        let window = windowScene?.windows.first(where: { $0.isKeyWindow })
+        
+        if let topVC = window?.rootViewController?.topmostViewController() {
+            if topVC != self {
+                topVC.present(self, animated: true) {
+                    completionHandler(true)
+                }
+            } else {
+                completionHandler(true)
+            }
+        } else {
+            completionHandler(false)
         }
     }
     
@@ -65,5 +95,23 @@ class NormalPlayer: AVPlayerViewController {
         } catch {
             Logger.shared.log("Failed to set up AVAudioSession: \(error)")
         }
+    }
+}
+
+extension UIViewController {
+    func topmostViewController() -> UIViewController {
+        if let presented = self.presentedViewController {
+            return presented.topmostViewController()
+        }
+        
+        if let navigation = self as? UINavigationController {
+            return navigation.visibleViewController?.topmostViewController() ?? navigation
+        }
+        
+        if let tabBar = self as? UITabBarController {
+            return tabBar.selectedViewController?.topmostViewController() ?? tabBar
+        }
+        
+        return self
     }
 }
