@@ -51,8 +51,9 @@ struct MediaView: View {
     @State private var isBookmarked: Bool = false
     @State private var selectedSeason: Int = 1
     @State private var showSeasonMenu: Bool = false
-    @State private var episodeProgress: [Int: Double] = [:] // [episodeId: progress]
+    @State private var episodeProgress: [Int: Double] = [:]
     @State private var overallShowProgress: Double = 0.0
+    @State private var playerViewController: NormalPlayer?
     
     @AppStorage("patchStream") var patchStream = false
     
@@ -505,12 +506,15 @@ struct MediaView: View {
                                 
                                 let newPlayer = AVPlayer(playerItem: playerItem)
                                 self.player = newPlayer
-                                let playerViewController = NormalPlayer()
-                                playerViewController.player = newPlayer
+                                
+                                if playerViewController == nil {
+                                    playerViewController = NormalPlayer()
+                                }
+                                playerViewController!.player = newPlayer
                                 
                                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                                    let rootVC = windowScene.windows.first?.rootViewController {
-                                    rootVC.present(playerViewController, animated: true) {
+                                    rootVC.present(playerViewController!, animated: true) {
                                         let lastPlayedTime = UserDefaults.standard.double(forKey: "lastPlayedTime_\(fullUrl)")
                                         if lastPlayedTime > 0 {
                                             let seekTime = CMTime(seconds: lastPlayedTime, preferredTimescale: 1)
