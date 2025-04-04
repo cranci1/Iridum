@@ -161,9 +161,9 @@ struct MediaView: View {
                             VStack(alignment: .leading) {
                                 Text("Overall Progress")
                                     .font(.headline)
-                                    .padding(.horizontal)
                                 ProgressView(value: overallShowProgress)
                                     .padding(.horizontal)
+                                    .foregroundColor(.accentColor)
                             }
                         }
                         
@@ -221,6 +221,9 @@ struct MediaView: View {
                                                         .frame(width: 240, height: 135)
                                                         .cornerRadius(8)
                                                     
+                                                    ProgressView(value: episodeProgress[episode.id])
+                                                        .frame(width: 240)
+                                                    
                                                     VStack(alignment: .leading, spacing: 4) {
                                                         Text("Episode \(episode.number)")
                                                             .font(.caption)
@@ -233,11 +236,6 @@ struct MediaView: View {
                                                             .foregroundColor(.secondary)
                                                             .lineLimit(3)
                                                             .multilineTextAlignment(.leading)
-                                                        
-                                                        if let progress = episodeProgress[episode.id] {
-                                                            ProgressView(value: progress)
-                                                                .frame(width: 240)
-                                                        }
                                                     }
                                                     .frame(width: 240, alignment: .leading)
                                                 }
