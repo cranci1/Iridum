@@ -165,6 +165,7 @@ struct MediaView: View {
                                     .padding(.horizontal)
                                     .foregroundColor(.accentColor)
                             }
+                            .padding(.horizontal)
                         }
                         
                         if !description.isEmpty {
