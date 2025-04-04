@@ -51,6 +51,8 @@ struct MediaView: View {
     @State private var isBookmarked: Bool = false
     @State private var selectedSeason: Int = 1
     @State private var showSeasonMenu: Bool = false
+    @State private var episodeProgress: [Int: Double] = [:] // [episodeId: progress]
+    @State private var overallShowProgress: Double = 0.0
     
     @AppStorage("patchStream") var patchStream = false
     
@@ -220,6 +222,11 @@ struct MediaView: View {
                                                             .foregroundColor(.secondary)
                                                             .lineLimit(3)
                                                             .multilineTextAlignment(.leading)
+                                                        
+                                                        if let progress = episodeProgress[episode.id] {
+                                                            ProgressView(value: progress)
+                                                                .frame(width: 240)
+                                                        }
                                                     }
                                                     .frame(width: 240, alignment: .leading)
                                                 }
@@ -228,6 +235,16 @@ struct MediaView: View {
                                     }
                                     .padding(.horizontal)
                                 }
+                            }
+                        }
+                        
+                        if !episodes.isEmpty {
+                            VStack(alignment: .leading) {
+                                Text("Overall Progress")
+                                    .font(.headline)
+                                    .padding(.horizontal)
+                                ProgressView(value: overallShowProgress)
+                                    .padding(.horizontal)
                             }
                         }
                         
@@ -531,6 +548,14 @@ struct MediaView: View {
             
             UserDefaults.standard.set(currentTime, forKey: "lastPlayedTime_\(fullURL)")
             UserDefaults.standard.set(duration, forKey: "totalTime_\(fullURL)")
+            
+            if let episode = episodes.first(where: { fullURL.contains("\($0.id)") }) {
+                let progress = currentTime / duration
+                episodeProgress[episode.id] = progress
+                
+                let totalProgress = episodeProgress.values.reduce(0, +)
+                overallShowProgress = totalProgress / Double(episodes.count)
+            }
         }
     }
 }
