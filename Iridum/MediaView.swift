@@ -401,7 +401,7 @@ struct MediaView: View {
     
     func loadEpisodeProgress() {
         for episode in episodes {
-            let progressKey = "episode_progress_\(episode.id)"
+            let progressKey = "progress_\(episode.playUrl)"
             if let progress = UserDefaults.standard.object(forKey: progressKey) as? Double {
                 episodeProgress[episode.id] = progress
             }
@@ -581,8 +581,7 @@ struct MediaView: View {
             if let episode = episodes.first(where: { fullURL.contains("\($0.id)") }) {
                 let progress = currentTime / duration
                 episodeProgress[episode.id] = progress
-                UserDefaults.standard.set(progress, forKey: "episode_progress_\(episode.id)")
-                
+                UserDefaults.standard.set(progress, forKey: "progress_\(episode.playUrl)")
                 calculateOverallProgress()
             }
         }
