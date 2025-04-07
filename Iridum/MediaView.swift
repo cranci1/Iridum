@@ -51,8 +51,6 @@ struct MediaView: View {
     @State private var isBookmarked: Bool = false
     @State private var selectedSeason: Int = 1
     @State private var showSeasonMenu: Bool = false
-    @State private var episodeProgress: [Int: Double] = [:]
-    @State private var overallShowProgress: Double = 0.0
     @State private var playerViewController: NormalPlayer?
     
     @AppStorage("patchStream") var patchStream = false
@@ -157,17 +155,6 @@ struct MediaView: View {
                         .padding(.horizontal)
                         .disabled(playUrl.isEmpty && watchUrl.isEmpty && episodes.isEmpty)
                         
-                        if episodes.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Overall Progress")
-                                    .font(.headline)
-                                ProgressView(value: overallShowProgress)
-                                    .padding(.horizontal)
-                                    .foregroundColor(.accentColor)
-                            }
-                            .padding(.horizontal)
-                        }
-                        
                         if !description.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Description")
@@ -221,9 +208,6 @@ struct MediaView: View {
                                                         .aspectRatio(16/9, contentMode: .fill)
                                                         .frame(width: 240, height: 135)
                                                         .cornerRadius(8)
-                                                    
-                                                    ProgressView(value: episodeProgress[episode.id])
-                                                        .frame(width: 240)
                                                     
                                                     VStack(alignment: .leading, spacing: 4) {
                                                         Text("Episode \(episode.number)")
@@ -288,6 +272,9 @@ struct MediaView: View {
         .onAppear {
             fetchMediaDetails()
             checkIfBookmarked()
+        }
+        .onDisappear {
+            removePeriodicTimeObserver()
         }
     }
     
@@ -379,9 +366,6 @@ struct MediaView: View {
                                         
                                         return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
                                     }
-                                    
-                                    loadEpisodeProgress()
-                                    calculateOverallProgress()
                                 }
                             }
                         }
@@ -397,29 +381,6 @@ struct MediaView: View {
         }
         
         task.resume()
-    }
-    
-    func loadEpisodeProgress() {
-        for episode in episodes {
-            let progressKey = "progress_\(episode.playUrl)"
-            if let progress = UserDefaults.standard.object(forKey: progressKey) as? Double {
-                episodeProgress[episode.id] = progress
-            }
-        }
-    }
-    
-    func calculateOverallProgress() {
-        var totalProgress = 0.0
-        var episodeCount = 0
-        
-        for episode in episodes {
-            if let progress = episodeProgress[episode.id], progress > 0 {
-                totalProgress += progress
-                episodeCount += 1
-            }
-        }
-        
-        overallShowProgress = episodeCount > 0 ? totalProgress / Double(episodeCount) : 0.0
     }
     
     func toggleBookmark() {
@@ -565,25 +526,42 @@ struct MediaView: View {
     func addPeriodicTimeObserver(fullURL: String) {
         guard let player = self.player else { return }
         
-        let interval = CMTime(seconds: 1.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
-            guard let currentItem = player.currentItem,
-                  currentItem.duration.seconds.isFinite else {
-                      return
-                  }
+        let interval = CMTime(seconds: 5.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        
+        let debounceQueue = DispatchQueue(label: "com.iridum.playbackSaveDebouncer")
+        var lastSaveTime: TimeInterval = 0
+        
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+            guard let self = self,
+                  let currentItem = player.currentItem,
+                  currentItem.status == .readyToPlay,
+                  currentItem.duration.seconds.isFinite,
+                  currentItem.duration.seconds > 0 else {
+                return
+            }
             
             let currentTime = time.seconds
             let duration = currentItem.duration.seconds
             
-            UserDefaults.standard.set(currentTime, forKey: "lastPlayedTime_\(fullURL)")
-            UserDefaults.standard.set(duration, forKey: "totalTime_\(fullURL)")
+            if currentTime < 5 {
+                return
+            }
             
-            if let episode = episodes.first(where: { fullURL.contains("\($0.id)") }) {
-                let progress = currentTime / duration
-                episodeProgress[episode.id] = progress
-                UserDefaults.standard.set(progress, forKey: "progress_\(episode.playUrl)")
-                calculateOverallProgress()
+            let currentTimeStamp = Date().timeIntervalSince1970
+            if currentTimeStamp - lastSaveTime >= 5 {
+                lastSaveTime = currentTimeStamp
+                
+                debounceQueue.async {
+                    UserDefaults.standard.set(currentTime, forKey: "lastPlayedTime_\(fullURL)")
+                    UserDefaults.standard.set(duration, forKey: "totalTime_\(fullURL)")
+                }
             }
         }
+    }
+    
+    func removePeriodicTimeObserver() {
+        guard let player = self.player, let token = timeObserverToken else { return }
+        player.removeTimeObserver(token)
+        timeObserverToken = nil
     }
 }

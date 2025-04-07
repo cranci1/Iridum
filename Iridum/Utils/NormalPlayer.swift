@@ -18,6 +18,11 @@ class NormalPlayer: AVPlayerViewController, AVPlayerViewControllerDelegate {
         setupPictureInPictureHandling()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        player?.pause()
+    }
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UserDefaults.standard.bool(forKey: "alwaysLandscape") {
             return .landscape
