@@ -531,9 +531,8 @@ struct MediaView: View {
         let debounceQueue = DispatchQueue(label: "com.iridum.playbackSaveDebouncer")
         var lastSaveTime: TimeInterval = 0
         
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-            guard let self = self,
-                  let currentItem = player.currentItem,
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
+            guard let currentItem = player.currentItem,
                   currentItem.status == .readyToPlay,
                   currentItem.duration.seconds.isFinite,
                   currentItem.duration.seconds > 0 else {
