@@ -81,7 +81,7 @@ struct HomeView: View {
     
     func fetchSliders() {
         isLoading = true
-        let urlString = "https://\(appSettings.baseDomain)"
+        let urlString = "https://\(appSettings.baseDomain)/it"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -111,7 +111,7 @@ struct HomeView: View {
                                           let imageUrl = poster["filename"] as? String else {
                                               return nil
                                           }
-                                    let href = "https://\(appSettings.baseDomain)/titles/\(id)-\(slug)"
+                                    let href = "https://\(appSettings.baseDomain)/it/titles/\(id)-\(slug)"
                                     return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                                 }
                                 return Slider(label: label, titles: titles)

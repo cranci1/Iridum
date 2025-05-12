@@ -67,7 +67,7 @@ struct SearchView: View {
         guard !searchText.isEmpty else { return }
         isLoading = true
         let query = searchText.replacingOccurrences(of: " ", with: "+")
-        let urlString = "https://\(appSettings.baseDomain)/archivio?search=\(query)"
+        let urlString = "https://\(appSettings.baseDomain)/it/archive?search=\(query)"
         
         guard let url = URL(string: urlString) else { return }
         
@@ -92,7 +92,7 @@ struct SearchView: View {
                                       let imageUrl = poster["filename"] as? String else {
                                           return nil
                                       }
-                                let href = "https://\(appSettings.baseDomain)/titles/\(id)-\(slug)"
+                                let href = "https://\(appSettings.baseDomain)/it/titles/\(id)-\(slug)"
                                 return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                             }
                             self.isLoading = false

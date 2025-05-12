@@ -283,7 +283,7 @@ struct MediaView: View {
     }
     
     func fetchMediaDetails() {
-        let searchUrl = "\(href)/stagione-\(selectedSeason)"
+        let searchUrl = "\(href)/season-\(selectedSeason)"
         
         guard let url = URL(string: searchUrl) else {
             isLoading = false
@@ -346,7 +346,8 @@ struct MediaView: View {
                                 }
                                 
                                 if let id = titleData["id"] as? Int {
-                                    self.playUrl = "https://\(AppSettings().baseDomain)/iframe/\(id)"
+                                    self.playUrl = "https://\(AppSettings().baseDomain)/it/iframe/\(id)"
+                                    print("https://\(AppSettings().baseDomain)/it/iframe/\(id)")
                                 }
                                 
                                 self.isLoading = false
