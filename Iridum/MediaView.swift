@@ -347,7 +347,6 @@ struct MediaView: View {
                                 
                                 if let id = titleData["id"] as? Int {
                                     self.playUrl = "https://\(AppSettings().baseDomain)/it/iframe/\(id)"
-                                    print("https://\(AppSettings().baseDomain)/it/iframe/\(id)")
                                 }
                                 
                                 self.isLoading = false
@@ -402,7 +401,12 @@ struct MediaView: View {
     }
     
     func startMediaUrlChain(url: String) {
-        guard let url = URL(string: url) else {
+        var modifiedUrl = url
+        if !url.contains("/it/iframe") && !url.contains("/en/iframe") {
+            modifiedUrl = url.replacingOccurrences(of: "/iframe", with: "/it/iframe")
+        }
+        
+        guard let url = URL(string: modifiedUrl) else {
             Logger.shared.log("Invalid play URL")
             return
         }
