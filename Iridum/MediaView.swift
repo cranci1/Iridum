@@ -439,6 +439,8 @@ struct MediaView: View {
             return
         }
         
+        print(fullUrl)
+        
         URLSession.custom.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 Logger.shared.log("Error fetching embed URL: \(error?.localizedDescription ?? "Unknown error")")
@@ -531,11 +533,8 @@ struct MediaView: View {
     func addPeriodicTimeObserver(fullURL: String) {
         guard let player = self.player else { return }
         
-        let interval = CMTime(seconds: 5.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        
-        let debounceQueue = DispatchQueue(label: "com.iridum.playbackSaveDebouncer")
-        var lastSaveTime: TimeInterval = 0
-        
+        print(fullURL)
+        let interval = CMTime(seconds: 1.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
             guard let currentItem = player.currentItem,
                   currentItem.status == .readyToPlay,
@@ -547,19 +546,8 @@ struct MediaView: View {
             let currentTime = time.seconds
             let duration = currentItem.duration.seconds
             
-            if currentTime < 5 {
-                return
-            }
-            
-            let currentTimeStamp = Date().timeIntervalSince1970
-            if currentTimeStamp - lastSaveTime >= 5 {
-                lastSaveTime = currentTimeStamp
-                
-                debounceQueue.async {
-                    UserDefaults.standard.set(currentTime, forKey: "lastPlayedTime_\(fullURL)")
-                    UserDefaults.standard.set(duration, forKey: "totalTime_\(fullURL)")
-                }
-            }
+            UserDefaults.standard.set(currentTime, forKey: "lastPlayedTime_\(fullURL)")
+            UserDefaults.standard.set(duration, forKey: "totalTime_\(fullURL)")
         }
     }
     
