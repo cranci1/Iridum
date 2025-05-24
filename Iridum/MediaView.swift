@@ -536,10 +536,7 @@ struct MediaView: View {
         print(fullURL)
         let interval = CMTime(seconds: 1.0, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
-            guard let currentItem = player.currentItem,
-                  currentItem.status == .readyToPlay,
-                  currentItem.duration.seconds.isFinite,
-                  currentItem.duration.seconds > 0 else {
+            guard let currentItem = player.currentItem, currentItem.status == .readyToPlay, currentItem.duration.seconds.isFinite, currentItem.duration.seconds > 0 else {
                 return
             }
             
