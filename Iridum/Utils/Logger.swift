@@ -63,7 +63,7 @@ class Logger {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return logs.map { "[\(dateFormatter.string(from: $0.timestamp))] \($0.message)" }
-        .joined(separator: "\n---\n")
+            .joined(separator: "\n---\n")
     }
     
     func clearLogs() {

@@ -100,8 +100,8 @@ struct HomeView: View {
                             self.sliders = slidersData.compactMap { sliderDict -> Slider? in
                                 guard let label = sliderDict["label"] as? String,
                                       let titlesData = sliderDict["titles"] as? [[String: Any]] else {
-                                          return nil
-                                      }
+                                    return nil
+                                }
                                 let titles: [SearchResult] = titlesData.compactMap { titleDict in
                                     guard let name = titleDict["name"] as? String,
                                           let id = titleDict["id"] as? Int,
@@ -109,8 +109,8 @@ struct HomeView: View {
                                           let images = titleDict["images"] as? [[String: Any]],
                                           let poster = images.first(where: { $0["type"] as? String == "poster" }),
                                           let imageUrl = poster["filename"] as? String else {
-                                              return nil
-                                          }
+                                        return nil
+                                    }
                                     let href = "https://\(appSettings.baseDomain)/it/titles/\(id)-\(slug)"
                                     return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                                 }

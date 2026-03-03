@@ -16,7 +16,7 @@ iOS/iPadOS 15.0 or later, made entirely with SwiftUI, only available via sideloa
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
 
 ```
-Copyright © 2024-2025 cranci. All rights reserved.
+Copyright © 2024-2026 cranci. All rights reserved.
 
 Iridum is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -57,7 +57,7 @@ struct SearchView: View {
                         EmptyView()
                     }
                 )
-                    .hidden()
+                .hidden()
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -90,8 +90,8 @@ struct SearchView: View {
                                       let images = titleDict["images"] as? [[String: Any]],
                                       let poster = images.first(where: { $0["type"] as? String == "poster" }),
                                       let imageUrl = poster["filename"] as? String else {
-                                          return nil
-                                      }
+                                    return nil
+                                }
                                 let href = "https://\(appSettings.baseDomain)/it/titles/\(id)-\(slug)"
                                 return SearchResult(name: name, imageUrl: "https://cdn.\(appSettings.baseDomain)/images/\(imageUrl)", href: href)
                             }

@@ -10,12 +10,12 @@
 		130217D12CF4E3AA0035C12F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130217D02CF4E3AA0035C12F /* HomeView.swift */; };
 		130217D32CF4E3AC0035C12F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130217D22CF4E3AC0035C12F /* Assets.xcassets */; };
 		130217D62CF4E3AC0035C12F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 130217D52CF4E3AC0035C12F /* Preview Assets.xcassets */; };
-		130217E12CF4E4E30035C12F /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 130217E02CF4E4E30035C12F /* SwiftSoup */; };
-		130217E72CF4E7690035C12F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 130217E62CF4E7690035C12F /* Kingfisher */; };
 		130217E92CF4E9060035C12F /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130217E82CF4E9060035C12F /* MediaView.swift */; };
 		1320195D2D033D300064CEEC /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1320195C2D033D300064CEEC /* SearchView.swift */; };
 		134293812CF75AA7003775BB /* NormalPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293802CF75AA7003775BB /* NormalPlayer.swift */; };
 		134293832CF75AF6003775BB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134293822CF75AF6003775BB /* SettingsView.swift */; };
+		13438E882F571FDE002358B6 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 13438E872F571FDE002358B6 /* Kingfisher */; };
+		13438E8B2F57200E002358B6 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 13438E8A2F57200E002358B6 /* SwiftSoup */; };
 		134EBB7B2D5A5A9500F10CBC /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134EBB7A2D5A5A9500F10CBC /* URLSession.swift */; };
 		138C7D422CFC76C000F2F825 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138C7D412CFC76C000F2F825 /* LibraryView.swift */; };
 		13EB47B32D6F60D400D87CDE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EB47B22D6F60D400D87CDE /* Logger.swift */; };
@@ -42,8 +42,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				130217E72CF4E7690035C12F /* Kingfisher in Frameworks */,
-				130217E12CF4E4E30035C12F /* SwiftSoup in Frameworks */,
+				13438E882F571FDE002358B6 /* Kingfisher in Frameworks */,
+				13438E8B2F57200E002358B6 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,8 +118,8 @@
 			);
 			name = Iridum;
 			packageProductDependencies = (
-				130217E02CF4E4E30035C12F /* SwiftSoup */,
-				130217E62CF4E7690035C12F /* Kingfisher */,
+				13438E872F571FDE002358B6 /* Kingfisher */,
+				13438E8A2F57200E002358B6 /* SwiftSoup */,
 			);
 			productName = Iridum;
 			productReference = 130217CB2CF4E3AA0035C12F /* Iridum.app */;
@@ -150,8 +150,8 @@
 			);
 			mainGroup = 130217C22CF4E3AA0035C12F;
 			packageReferences = (
-				130217DF2CF4E4E30035C12F /* XCRemoteSwiftPackageReference "SwiftSoup" */,
-				130217E52CF4E7690035C12F /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				13438E862F571FDE002358B6 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				13438E892F57200E002358B6 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = 130217CC2CF4E3AA0035C12F /* Products */;
 			projectDirPath = "";
@@ -325,7 +325,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Iridum/Preview Content\"";
-				DEVELOPMENT_TEAM = 399LMK6Q2Y;
+				DEVELOPMENT_TEAM = KY69KV5SVN;
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -361,7 +361,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Iridum/Preview Content\"";
-				DEVELOPMENT_TEAM = 399LMK6Q2Y;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -411,34 +411,34 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		130217DF2CF4E4E30035C12F /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+		13438E862F571FDE002358B6 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
 			requirement = {
-				kind = exactVersion;
-				version = 2.4.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.7.0;
 			};
 		};
-		130217E52CF4E7690035C12F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		13438E892F57200E002358B6 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
 			requirement = {
-				kind = exactVersion;
-				version = 7.9.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		130217E02CF4E4E30035C12F /* SwiftSoup */ = {
+		13438E872F571FDE002358B6 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 130217DF2CF4E4E30035C12F /* XCRemoteSwiftPackageReference "SwiftSoup" */;
-			productName = SwiftSoup;
-		};
-		130217E62CF4E7690035C12F /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 130217E52CF4E7690035C12F /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = 13438E862F571FDE002358B6 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		13438E8A2F57200E002358B6 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 13438E892F57200E002358B6 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

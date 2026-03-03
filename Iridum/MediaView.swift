@@ -53,7 +53,7 @@ struct MediaView: View {
     @State private var showSeasonMenu: Bool = false
     @State private var playerViewController: NormalPlayer?
     
-    @AppStorage("patchStream") var patchStream = false
+    @AppStorage("patchStream") var patchStream = true
     
     @EnvironmentObject private var libraryViewModel: LibraryViewModel
     
@@ -361,8 +361,8 @@ struct MediaView: View {
                                               let images = episodeData["images"] as? [[String: Any]],
                                               let firstImage = images.first,
                                               let filename = firstImage["filename"] as? String else {
-                                                  return nil
-                                              }
+                                            return nil
+                                        }
                                         
                                         return Episode(id: id, name: name, plot: plot, imageFilename: filename, number: number, titleId: titleId)
                                     }
@@ -454,27 +454,27 @@ struct MediaView: View {
                         guard let urlRegex = try? NSRegularExpression(pattern: urlPattern),
                               let urlMatch = urlRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let urlRange = Range(urlMatch.range(at: 1), in: html) else {
-                                  Logger.shared.log("Failed to extract URL")
-                                  return
-                              }
+                            Logger.shared.log("Failed to extract URL")
+                            return
+                        }
                         let baseUrl = String(html[urlRange])
                         
                         let tokenPattern = #"'token':\s*'([^']+)'"#
                         guard let tokenRegex = try? NSRegularExpression(pattern: tokenPattern),
                               let tokenMatch = tokenRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let tokenRange = Range(tokenMatch.range(at: 1), in: html) else {
-                                  Logger.shared.log("Failed to extract token")
-                                  return
-                              }
+                            Logger.shared.log("Failed to extract token")
+                            return
+                        }
                         let token = String(html[tokenRange])
                         
                         let expiresPattern = #"'expires':\s*'([^']+)'"#
                         guard let expiresRegex = try? NSRegularExpression(pattern: expiresPattern),
                               let expiresMatch = expiresRegex.firstMatch(in: html, range: NSRange(html.startIndex..., in: html)),
                               let expiresRange = Range(expiresMatch.range(at: 1), in: html) else {
-                                  Logger.shared.log("Failed to extract expires")
-                                  return
-                              }
+                            Logger.shared.log("Failed to extract expires")
+                            return
+                        }
                         let expires = String(html[expiresRange])
                         
                         let finalUrl: String
