@@ -6,7 +6,7 @@ on:
 jobs:
   build-ios:
     name: Build IPA
-    runs-on: macOS-latest
+    runs-on: macOS-26
     steps:
       - name: Use Node.js 20
         uses: actions/setup-node@v4
